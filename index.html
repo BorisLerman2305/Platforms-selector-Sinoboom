@@ -373,9 +373,9 @@
     </div>
     <div class="col-6 col-lg-3">
       <div class="card-box text-center h-100" style="border-top:4px solid var(--sb-blue2);">
-        <div style="font-size:2rem;font-weight:900;color:var(--sb-blue2);">$29.9M</div>
-        <div class="text-muted" style="font-size:.82rem;">שווי שוק 2025</div>
-        <div class="mt-1"><small class="text-muted">לפי מחירי ממוצע לסוג</small></div>
+        <div style="font-size:2rem;font-weight:900;color:var(--sb-blue2);">4,062</div>
+        <div class="text-muted" style="font-size:.82rem;">יחידות מצטברות 2022&ndash;2025</div>
+        <div class="mt-1"><small class="text-muted">סה&quot;כ מסירות בשוק (הערכה+ממשי)</small></div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
@@ -387,13 +387,55 @@
     </div>
   </div>
 
+  <!-- Year selector -->
+  <div class="card-box mb-3 py-2 px-3">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <span class="fw-semibold small" style="color:var(--sb-blue);">
+        <i class="bi bi-calendar-range me-1"></i>הצג שנים בגרף:
+      </span>
+      <div class="d-flex gap-3 flex-wrap">
+        <div class="form-check form-check-inline mb-0">
+          <input class="form-check-input" type="checkbox" id="yr2022" checked onchange="onYearToggle()">
+          <label class="form-check-label small" for="yr2022">2022 <span class="text-muted" style="font-size:.68rem;">*</span></label>
+        </div>
+        <div class="form-check form-check-inline mb-0">
+          <input class="form-check-input" type="checkbox" id="yr2023" checked onchange="onYearToggle()">
+          <label class="form-check-label small" for="yr2023">2023 <span class="text-muted" style="font-size:.68rem;">*</span></label>
+        </div>
+        <div class="form-check form-check-inline mb-0">
+          <input class="form-check-input" type="checkbox" id="yr2024" checked onchange="onYearToggle()">
+          <label class="form-check-label small" for="yr2024">2024</label>
+        </div>
+        <div class="form-check form-check-inline mb-0">
+          <input class="form-check-input" type="checkbox" id="yr2025" checked onchange="onYearToggle()">
+          <label class="form-check-label small" for="yr2025">2025</label>
+        </div>
+        <div class="form-check form-check-inline mb-0">
+          <input class="form-check-input" type="checkbox" id="yr2026" checked onchange="onYearToggle()">
+          <label class="form-check-label small" for="yr2026">2026 <span class="text-muted" style="font-size:.68rem;">**</span></label>
+        </div>
+      </div>
+      <div class="d-flex gap-2 ms-auto">
+        <button class="btn btn-sm btn-outline-primary" style="font-size:.8rem;" onclick="setAllYears(true)">
+          <i class="bi bi-check2-all me-1"></i>בחר הכל
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" style="font-size:.8rem;" onclick="setAllYears(false)">
+          <i class="bi bi-x-lg me-1"></i>נקה הכל
+        </button>
+      </div>
+    </div>
+    <div class="mt-1" style="font-size:.7rem;color:#aaa;">
+      * הערכה מבוססת על יחס נתוני היצרן &nbsp;|&nbsp; ** נתון חלקי (עד תאריך הנתונים)
+    </div>
+  </div>
+
   <!-- Charts Row -->
   <div class="row g-3 mb-3">
-    <!-- Grouped bar by type per year -->
+    <!-- Multi-line trend chart -->
     <div class="col-lg-7">
       <div class="card-box h-100">
         <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
-          <i class="bi bi-bar-chart-fill me-1"></i>מסירות שנתיות לפי סוג ציוד
+          <i class="bi bi-graph-up me-1"></i>מגמות שנתיות לפי סוג ציוד
         </h6>
         <canvas id="chartGaryTypes" style="max-height:280px;"></canvas>
       </div>
@@ -426,8 +468,6 @@
             <th class="text-center fw-bold">2025</th>
             <th class="text-center">צמיחה</th>
             <th class="text-center">% שוק '25</th>
-            <th class="text-center">מחיר ממוצע</th>
-            <th class="text-center">שווי שוק '25</th>
             <th>דגמי סינובום רלוונטיים</th>
           </tr>
         </thead>
@@ -441,8 +481,6 @@
             <td class="text-center fw-bold">1,270</td>
             <td class="text-center" style="color:#2ecc71;">+48.4%</td>
             <td class="text-center">100%</td>
-            <td class="text-center">—</td>
-            <td class="text-center">$29.9M</td>
             <td></td>
           </tr>
         </tfoot>
@@ -485,12 +523,6 @@
         <div class="text-center p-3 rounded" style="background:var(--sb-light);">
           <div id="simoUnits" style="font-size:1.8rem;font-weight:900;color:var(--sb-blue);">64</div>
           <div class="text-muted" style="font-size:.77rem;">יחידות לשנה</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="text-center p-3 rounded" style="background:#fff8f0;">
-          <div id="simoRevenue" style="font-size:1.8rem;font-weight:900;color:var(--sb-orange);">$1.5M</div>
-          <div class="text-muted" style="font-size:.77rem;">הכנסות משוערות</div>
         </div>
       </div>
       <div class="col-6 col-md-3">
@@ -1310,13 +1342,8 @@ function updateSimulator(pct) {
   document.getElementById('simoLabel').textContent = pct.toFixed(1) + '%';
   const total2025 = GARY.gary.y25;
   const units = Math.round(total2025 * pct / 100);
-  const revenue = GARY.types.reduce((sum, t) => {
-    const typeUnits = Math.round(t.y25 * pct / 100);
-    return sum + typeUnits * t.avg;
-  }, 0);
   const growth = units > 0 ? ((units - GARY.sinoUnits) / GARY.sinoUnits * 100).toFixed(0) : 0;
   document.getElementById('simoUnits').textContent = units.toLocaleString();
-  document.getElementById('simoRevenue').textContent = fmtUSD(revenue);
   document.getElementById('simoGrowth').textContent = (growth > 0 ? '+' : '') + growth + '%';
 
   // Rank
@@ -1376,40 +1403,58 @@ function initMarketCharts() {
   var yearLabels = ['2022 *', '2023 *', '2024', '2025', '2026 **'];
   var yearTotals = [est22, est23, act24, act25, part26];
 
-  // ── 1. Stacked bar: years on X, types stacked ──────────────────────────────
-  var stackDs = GARY.types.map(function(t) {
+  // ── 1. Multi-line trend chart (one line per equipment type) ─────────────────
+  // Expose helpers globally so year-filter callbacks can use them
+  window._simYearLabels = yearLabels.slice();
+  window._simYearTotals = yearTotals.slice();
+  window._simUnitsFn   = function(t, idx) { return units(t, idx); };
+
+  var lineDs = GARY.types.map(function(t) {
     return {
       label: t.heb,
       data: yearLabels.map(function(_, i) { return units(t, i); }),
-      backgroundColor: t.color,
-      stack: 'total',
-      borderRadius: 3
+      borderColor: t.color,
+      backgroundColor: t.color + '22',
+      fill: false,
+      tension: 0.35,
+      pointRadius: 6,
+      pointHoverRadius: 9,
+      pointBackgroundColor: t.color,
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      borderWidth: 2.5
     };
   });
 
-  new Chart(document.getElementById('chartGaryTypes'), {
-    type: 'bar',
-    data: { labels: yearLabels, datasets: stackDs },
+  window._trendChart = new Chart(document.getElementById('chartGaryTypes'), {
+    type: 'line',
+    data: { labels: yearLabels, datasets: lineDs },
     options: {
       responsive: true,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 11 }, padding: 14, usePointStyle: true }
+        },
         tooltip: {
           callbacks: {
             footer: function(items) {
-              var i = items[0].dataIndex;
-              var lbl = i < 2 ? ' (הערכה)' : i === 4 ? ' (חלקי)' : '';
-              return 'סה"כ: ' + yearTotals[i].toLocaleString() + ' יח' + lbl;
+              var total = items.reduce(function(s, it) { return s + it.raw; }, 0);
+              var idx   = items[0].dataIndex;
+              var note  = idx < 2 ? ' (הערכה)' : idx === 4 ? ' (חלקי)' : '';
+              return 'סה"כ: ' + total.toLocaleString() + ' יח\'' + note;
             }
           }
         }
       },
       scales: {
-        x: { stacked: true },
         y: {
-          stacked: true,
-          title: { display: true, text: 'יחידות' }
-        }
+          beginAtZero: true,
+          title: { display: true, text: 'יחידות' },
+          grid: { color: 'rgba(0,0,0,0.06)' }
+        },
+        x: { grid: { display: false } }
       }
     }
   });
@@ -1459,7 +1504,6 @@ function initMarketCharts() {
       var u26p = t.y26p;
       var growth = u24 > 0 ? ((u25 - u24) / u24 * 100).toFixed(0) : null;
       var share25 = (u25 / tot25 * 100).toFixed(1);
-      var mktVal = (u25 * t.avg / 1e6).toFixed(2);
       var gColor = growth !== null ? (parseInt(growth) > 0 ? '#2ecc71' : '#e74c3c') : '#888';
       var gText  = growth !== null ? (parseInt(growth) > 0 ? '+' : '') + growth + '%' : '—';
       var sinoHtml = t.sino.length > 0
@@ -1475,8 +1519,6 @@ function initMarketCharts() {
         '<td class="text-center fw-bold">' + u25 + '</td>' +
         '<td class="text-center fw-bold" style="color:' + gColor + ';">' + gText + '</td>' +
         '<td class="text-center">' + share25 + '%</td>' +
-        '<td class="text-center">' + fmtUSD(t.avg) + '</td>' +
-        '<td class="text-center">$' + mktVal + 'M</td>' +
         '<td>' + sinoHtml + '</td>' +
         '</tr>';
     }).join('');
@@ -1538,6 +1580,34 @@ function initMarketCharts() {
 
   // ── 5. Simulator init ──────────────────────────────────────────────────────
   updateSimulator(5);
+}
+
+function onYearToggle() {
+  if (!window._trendChart) return;
+  var ids = ['yr2022','yr2023','yr2024','yr2025','yr2026'];
+  var sel = [];
+  ids.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el && el.checked) sel.push(i);
+  });
+  if (sel.length === 0) return; // keep at least one point visible
+  window._trendChart.data.labels = sel.map(function(i) {
+    return window._simYearLabels[i];
+  });
+  window._trendChart.data.datasets.forEach(function(ds, di) {
+    ds.data = sel.map(function(i) {
+      return window._simUnitsFn(GARY.types[di], i);
+    });
+  });
+  window._trendChart.update();
+}
+
+function setAllYears(v) {
+  ['yr2022','yr2023','yr2024','yr2025','yr2026'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.checked = v;
+  });
+  onYearToggle();
 }
 
 document.addEventListener("DOMContentLoaded", initMarketCharts);
