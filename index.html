@@ -124,6 +124,11 @@
         <i class="bi bi-table me-1"></i>כל&nbsp;הדגמים</a></li>
       <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabMarket">
         <i class="bi bi-bar-chart-line me-1"></i>ניתוח&nbsp;שוק</a></li>
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#tabSimulator">
+          <i class="bi bi-graph-up-arrow me-1"></i>סימולטור שוק
+        </a>
+      </li>
     </ul>
   </div>
 </div>
@@ -600,6 +605,213 @@
   </div>
 
 </div><!-- /tabMarket -->
+
+<div class="tab-pane fade" id="tabSimulator">
+  <div class="alert mb-3 d-flex align-items-start gap-2"
+       style="background:#fff8e1;border:1.5px solid #f9a825;border-radius:8px;" role="alert">
+    <i class="bi bi-info-circle-fill fs-5 mt-1" style="color:#f9a825;flex-shrink:0;"></i>
+    <div class="small lh-base">
+      <strong>מקור נתוני הבסיס:</strong>
+      נתוני השוק לשנים <strong>2024&ndash;2025</strong> התקבלו ישירות מ-<strong>SINOBOOM</strong> (יצרן).
+      נתוני <strong>2022&ndash;2023</strong> הינם <em>הערכה</em> המבוססת על יחס בין נתוני היצרן לנתוני משרד התחבורה.
+      נתוני <strong>2026&ndash;2028</strong> הינם <em>תחזית</em> הנגזרת מהנחות המשתמש בלבד.
+    </div>
+  </div>
+  <div class="row g-3 mb-3">
+
+    <!-- ASSUMPTIONS PANEL -->
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header fw-bold text-white d-flex align-items-center gap-2" style="background:var(--sb-blue);">
+          <i class="bi bi-sliders"></i>הנחות סימולציה
+        </div>
+        <div class="card-body">
+
+          <!-- Growth -->
+          <p class="fw-semibold small text-muted mb-2 mt-1">
+            <i class="bi bi-graph-up-arrow me-1" style="color:var(--sb-blue);"></i>צמיחת שוק שנתית
+          </p>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small mb-0 fw-semibold">שנת 2026</label>
+              <span class="badge bg-primary px-2" id="g2026Val">+10.0%</span>
+            </div>
+            <input type="range" class="form-range" id="g2026"
+                   min="-20" max="60" step="1" value="10"
+                   oninput="syncSim('g2026',this.value,true)">
+            <div style="height:12px;"></div>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small mb-0 fw-semibold">שנת 2027</label>
+              <span class="badge bg-primary px-2" id="g2027Val">+8.0%</span>
+            </div>
+            <input type="range" class="form-range" id="g2027"
+                   min="-20" max="60" step="1" value="8"
+                   oninput="syncSim('g2027',this.value,true)">
+            <div style="height:12px;"></div>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small mb-0 fw-semibold">שנת 2028</label>
+              <span class="badge bg-primary px-2" id="g2028Val">+8.0%</span>
+            </div>
+            <input type="range" class="form-range" id="g2028"
+                   min="-20" max="60" step="1" value="8"
+                   oninput="syncSim('g2028',this.value,true)">
+          </div>
+          <hr class="my-2">
+
+          <!-- Share Target -->
+          <p class="fw-semibold small text-muted mb-2">
+            <i class="bi bi-bullseye me-1" style="color:var(--sb-orange);"></i>יעד נתח שוק &mdash; סינובום
+          </p>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small mb-0 fw-semibold">שנת 2026</label>
+              <span class="badge px-2" style="background:var(--sb-orange);" id="s2026Val">2.0%</span>
+            </div>
+            <input type="range" class="form-range" id="s2026"
+                   min="0.5" max="25" step="0.5" value="2"
+                   oninput="syncSim('s2026',this.value,false)">
+            <div style="height:12px;"></div>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small mb-0 fw-semibold">שנת 2027</label>
+              <span class="badge px-2" style="background:var(--sb-orange);" id="s2027Val">5.0%</span>
+            </div>
+            <input type="range" class="form-range" id="s2027"
+                   min="0.5" max="25" step="0.5" value="5"
+                   oninput="syncSim('s2027',this.value,false)">
+            <div style="height:12px;"></div>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small mb-0 fw-semibold">שנת 2028</label>
+              <span class="badge px-2" style="background:var(--sb-orange);" id="s2028Val">8.0%</span>
+            </div>
+            <input type="range" class="form-range" id="s2028"
+                   min="0.5" max="25" step="0.5" value="8"
+                   oninput="syncSim('s2028',this.value,false)">
+          </div>
+          <hr class="my-2">
+
+          <!-- Prices -->
+          <p class="fw-semibold small text-muted mb-2">
+            <i class="bi bi-currency-dollar me-1" style="color:#2ecc71;"></i>מחיר ממוצע לסוג ($)
+          </p>
+          <div class="d-flex flex-column gap-1">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text" style="min-width:130px;font-size:10px;">מספריים קטנה</span>
+              <span class="input-group-text small">$</span>
+              <input type="number" id="pEscSmall" value="10000" class="form-control form-control-sm" onchange="runSimulation()">
+            </div>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text" style="min-width:130px;font-size:10px;">מספריים גדולה</span>
+              <span class="input-group-text small">$</span>
+              <input type="number" id="pEscMid" value="31000" class="form-control form-control-sm" onchange="runSimulation()">
+            </div>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text" style="min-width:130px;font-size:10px;">בום מפרקי</span>
+              <span class="input-group-text small">$</span>
+              <input type="number" id="pArt" value="65000" class="form-control form-control-sm" onchange="runSimulation()">
+            </div>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text" style="min-width:130px;font-size:10px;">בום ישר (טלסקופי)</span>
+              <span class="input-group-text small">$</span>
+              <input type="number" id="pTele" value="75000" class="form-control form-control-sm" onchange="runSimulation()">
+            </div>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text" style="min-width:130px;font-size:10px;">מנוף עצמאי VL/ML</span>
+              <span class="input-group-text small">$</span>
+              <input type="number" id="pSelf" value="7500" class="form-control form-control-sm" onchange="runSimulation()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8 d-flex flex-column gap-3">
+      <div class="row g-2">
+        <div class="col-6 col-md-3">
+          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
+            <div class="small text-muted">שוק כולל 2028</div>
+            <div class="fw-bold" style="font-size:1.5rem;color:var(--sb-blue);" id="kpiMkt2028">&#8212;</div>
+            <div class="text-muted" style="font-size:11px;">יחידות (תחזית)</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
+            <div class="small text-muted">יחידות סינובום 2028</div>
+            <div class="fw-bold" style="font-size:1.5rem;color:var(--sb-orange);" id="kpiSino2028">&#8212;</div>
+            <div class="text-muted" style="font-size:11px;">לפי נתח יעד</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
+            <div class="small text-muted">הכנסה שנתית 2028</div>
+            <div class="fw-bold" style="font-size:1.5rem;color:#27ae60;" id="kpiRev2028">&#8212;</div>
+            <div class="text-muted" style="font-size:11px;">מכירות ($)</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
+            <div class="small text-muted">CAGR שוק 25&#8594;28</div>
+            <div class="fw-bold" style="font-size:1.5rem;color:var(--sb-blue2);" id="kpiCagr">&#8212;</div>
+            <div class="text-muted" style="font-size:11px;">שיעור צמיחה שנתי</div>
+          </div>
+        </div>
+      </div>
+      <div class="card border-0 shadow-sm flex-grow-1">
+        <div class="card-body p-2">
+          <canvas id="chartSimMain" height="210"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header small fw-semibold bg-light border-bottom">
+          <i class="bi bi-pie-chart me-1"></i>התפתחות נתח שוק סינובום (%)
+        </div>
+        <div class="card-body p-2"><canvas id="chartSimShare" height="180"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header small fw-semibold bg-light border-bottom">
+          <i class="bi bi-cash-stack me-1"></i>הכנסות שנתיות &mdash; סינובום ($M)
+        </div>
+        <div class="card-body p-2"><canvas id="chartSimRevenue" height="180"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-header small fw-semibold bg-light border-bottom">
+      <i class="bi bi-table me-1"></i>טבלת תחזית מלאה 2022&ndash;2028
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm table-hover mb-0 text-center small">
+          <thead class="table-dark">
+            <tr>
+              <th>שנה</th><th>שוק כולל</th>
+              <th>מספריים קטנה</th><th>מספריים גדולה</th>
+              <th>בום מפרקי</th><th>בום ישר</th><th>מנוף עצמאי</th>
+              <th style="color:#f47920;font-weight:700;">יח&#39; סינובום</th>
+              <th>נתח</th><th>הכנסה ($M)</th><th>סטטוס</th>
+            </tr>
+          </thead>
+          <tbody id="simTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-4 flex-wrap small text-muted pb-2">
+    <span><span class="badge bg-success me-1">&#10003;</span>נתון אמיתי &mdash; מקור SINOBOOM (יצרן)</span>
+    <span><span class="badge bg-secondary me-1">&#126;</span>הערכה &mdash; מחושב על פי יחס יצרן / משה&quot;ת</span>
+    <span><span class="badge me-1" style="background:var(--sb-orange);">&#9670;</span>תחזית &mdash; מבוסס הנחות המשתמש</span>
+  </div>
+
+</div><!-- /tabSimulator -->
+
 
 <!-- /tabMarket -->
 
@@ -1745,6 +1957,316 @@ function initMarketCharts() {
 }
 
 document.addEventListener("DOMContentLoaded", initMarketCharts);
+
+// ========== MARKET SIMULATOR TAB ==========
+const SIM_DATA = {
+  official: {2022:603,2023:547},
+  garyFactor: 1.684,
+  actual: {
+    2024:{ total:856,  types:{escSmall:546,escMid:16,art:178,selfProp:63,tele:53} },
+    2025:{ total:1270, types:{escSmall:907,escMid:51,art:216,selfProp:29,tele:67} }
+  },
+  sinoBaseShare: 0.013,
+  colors:{
+    escSmall:'#F47920', escMid:'#2ecc71', art:'#29ABE2',
+    selfProp:'#9b59b6', tele:'#1090C4'
+  },
+  labels:{
+    escSmall:'מספריים קטנה', escMid:'מספריים גדולה', art:'בום מפרקי',
+    selfProp:'מנוף עצמאי', tele:'בום ישר'
+  }
+};
+let _cMain, _cShare, _cRev;
+const SIM_YEARS = [2022,2023,2024,2025,2026,2027,2028];
+
+function syncSim(id, val, withSign) {
+  var v = parseFloat(val);
+  var txt = withSign
+    ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%'
+    : v.toFixed(1) + '%';
+  document.getElementById(id + 'Val').textContent = txt;
+  runSimulation();
+}
+
+function _readInputs() {
+  return {
+    g: {
+      2026: parseFloat(document.getElementById('g2026').value) / 100,
+      2027: parseFloat(document.getElementById('g2027').value) / 100,
+      2028: parseFloat(document.getElementById('g2028').value) / 100
+    },
+    s: {
+      2022: SIM_DATA.sinoBaseShare,
+      2023: SIM_DATA.sinoBaseShare,
+      2024: SIM_DATA.sinoBaseShare,
+      2025: SIM_DATA.sinoBaseShare,
+      2026: parseFloat(document.getElementById('s2026').value) / 100,
+      2027: parseFloat(document.getElementById('s2027').value) / 100,
+      2028: parseFloat(document.getElementById('s2028').value) / 100
+    },
+    p: {
+      escSmall: parseInt(document.getElementById('pEscSmall').value) || 10000,
+      escMid:   parseInt(document.getElementById('pEscMid').value)   || 31000,
+      art:      parseInt(document.getElementById('pArt').value)      || 65000,
+      tele:     parseInt(document.getElementById('pTele').value)     || 75000,
+      selfProp: parseInt(document.getElementById('pSelf').value)     || 7500
+    }
+  };
+}
+
+function _buildRows(inp) {
+  var act24 = SIM_DATA.actual[2024];
+  var act25 = SIM_DATA.actual[2025];
+  var f = SIM_DATA.garyFactor;
+  var rows = {};
+
+  // distributions for scaling
+  var dist24 = {};
+  var dist25 = {};
+  var keys = ['escSmall','escMid','art','selfProp','tele'];
+  keys.forEach(function(k) {
+    dist24[k] = act24.types[k] / act24.total;
+    dist25[k] = act25.types[k] / act25.total;
+  });
+
+  SIM_YEARS.forEach(function(yr) {
+    var total, types, kind;
+
+    if (yr === 2024) {
+      total = act24.total;
+      types = Object.assign({}, act24.types);
+      kind = 'actual';
+    } else if (yr === 2025) {
+      total = act25.total;
+      types = Object.assign({}, act25.types);
+      kind = 'actual';
+    } else if (yr <= 2023) {
+      total = Math.round(SIM_DATA.official[yr] * f);
+      types = {};
+      keys.forEach(function(k) { types[k] = Math.round(total * dist24[k]); });
+      kind = 'estimate';
+    } else {
+      total = Math.round(rows[yr - 1].total * (1 + inp.g[yr]));
+      types = {};
+      keys.forEach(function(k) { types[k] = Math.round(total * dist25[k]); });
+      kind = 'proj';
+    }
+
+    var share = inp.s[yr];
+    var sinoUnits = Math.round(total * share);
+
+    // weighted avg price from type mix
+    var typeSum = keys.reduce(function(a, k) { return a + types[k]; }, 0) || 1;
+    var wavg = keys.reduce(function(a, k) {
+      return a + (types[k] / typeSum) * (inp.p[k] || 0);
+    }, 0);
+    var revenue = sinoUnits * wavg;
+
+    rows[yr] = { total: total, types: types, share: share,
+                 sinoUnits: sinoUnits, revenue: revenue, kind: kind };
+  });
+
+  return rows;
+}
+
+function runSimulation() {
+  var inp = _readInputs();
+  var data = _buildRows(inp);
+  var d28 = data[2028];
+  var d25 = data[2025];
+
+  // KPIs
+  document.getElementById('kpiMkt2028').textContent  = d28.total.toLocaleString();
+  document.getElementById('kpiSino2028').textContent = d28.sinoUnits.toLocaleString();
+  document.getElementById('kpiRev2028').textContent  = '$' + (d28.revenue / 1e6).toFixed(1) + 'M';
+  var cagr = d25.total > 0 ? (Math.pow(d28.total / d25.total, 1/3) - 1) * 100 : 0;
+  document.getElementById('kpiCagr').textContent = (cagr >= 0 ? '+' : '') + cagr.toFixed(1) + '%';
+
+  // TABLE
+  var tbody = document.getElementById('simTableBody');
+  tbody.innerHTML = '';
+  SIM_YEARS.forEach(function(yr) {
+    var d = data[yr];
+    var badge = d.kind === 'actual'
+      ? '<span class="badge bg-success">&#10003; אמיתי</span>'
+      : d.kind === 'estimate'
+        ? '<span class="badge bg-secondary">&#126; הערכה</span>'
+        : '<span class="badge" style="background:var(--sb-orange);">&#9670; תחזית</span>';
+    tbody.insertAdjacentHTML('beforeend',
+      '<tr class="' + (d.kind === 'actual' ? 'table-light' : '') + '">' +
+      '<td class="fw-bold">' + yr + '</td>' +
+      '<td>' + d.total.toLocaleString() + '</td>' +
+      '<td>' + (d.types.escSmall || 0).toLocaleString() + '</td>' +
+      '<td>' + (d.types.escMid   || 0).toLocaleString() + '</td>' +
+      '<td>' + (d.types.art      || 0).toLocaleString() + '</td>' +
+      '<td>' + (d.types.tele     || 0).toLocaleString() + '</td>' +
+      '<td>' + (d.types.selfProp || 0).toLocaleString() + '</td>' +
+      '<td class="fw-bold" style="color:var(--sb-orange);">' + d.sinoUnits.toLocaleString() + '</td>' +
+      '<td>' + (d.share * 100).toFixed(1) + '%</td>' +
+      '<td>' + (d.revenue > 0 ? '$' + (d.revenue / 1e6).toFixed(2) + 'M' : '&#8212;') + '</td>' +
+      '<td>' + badge + '</td>' +
+      '</tr>'
+    );
+  });
+
+  // CHART DATA
+  var labels = SIM_YEARS.map(String);
+  var keys = ['escSmall','escMid','art','tele','selfProp'];
+  var sinoArr  = SIM_YEARS.map(function(y) { return data[y].sinoUnits; });
+  var shareArr = SIM_YEARS.map(function(y) { return parseFloat((data[y].share * 100).toFixed(2)); });
+  var revArr   = SIM_YEARS.map(function(y) { return parseFloat((data[y].revenue / 1e6).toFixed(2)); });
+  var bgRevArr = SIM_YEARS.map(function(y) {
+    return data[y].kind === 'actual'   ? 'rgba(41,171,226,0.85)'
+         : data[y].kind === 'estimate' ? 'rgba(150,150,150,0.5)'
+         :                               'rgba(244,121,32,0.8)';
+  });
+
+  if (_cMain) {
+    keys.forEach(function(k, i) {
+      _cMain.data.datasets[i].data = SIM_YEARS.map(function(y) { return data[y].types[k] || 0; });
+    });
+    _cMain.data.datasets[keys.length].data = sinoArr;
+    _cMain.update('none');
+
+    _cShare.data.datasets[0].data = shareArr;
+    _cShare.data.datasets[0].pointBackgroundColor = SIM_YEARS.map(function(y) {
+      return data[y].kind === 'actual' ? '#29ABE2' : 'var(--sb-orange)';
+    });
+    _cShare.update('none');
+
+    _cRev.data.datasets[0].data = revArr;
+    _cRev.data.datasets[0].backgroundColor = bgRevArr;
+    _cRev.update('none');
+  }
+}
+
+function initSimCharts() {
+  var inp = _readInputs();
+  var data = _buildRows(inp);
+  var labels = SIM_YEARS.map(String);
+  var keys = ['escSmall','escMid','art','tele','selfProp'];
+
+  // ── Main: stacked bar (by type) + Sinoboom line overlay ──
+  var stackDs = keys.map(function(k) {
+    return {
+      label: SIM_DATA.labels[k],
+      data: SIM_YEARS.map(function(y) { return data[y].types[k] || 0; }),
+      backgroundColor: SIM_DATA.colors[k],
+      stack: 'mkt',
+      order: 2
+    };
+  });
+  stackDs.push({
+    label: 'יחידות סינובום',
+    data: SIM_YEARS.map(function(y) { return data[y].sinoUnits; }),
+    type: 'line',
+    borderColor: '#cc0000',
+    backgroundColor: 'rgba(204,0,0,0.08)',
+    borderWidth: 2.5,
+    pointRadius: 6,
+    pointBackgroundColor: '#cc0000',
+    fill: false,
+    order: 1,
+    yAxisID: 'ySino'
+  });
+
+  _cMain = new Chart(document.getElementById('chartSimMain'), {
+    type: 'bar',
+    data: { labels: labels, datasets: stackDs },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        title: {
+          display: true,
+          text: 'שוק במות ההרמה לפי סוגים + מיצוב סינובום (2022–2028)',
+          font: { size: 12, weight: 'bold' }
+        },
+        tooltip: {
+          callbacks: {
+            footer: function(items) {
+              var yr = parseInt(items[0].label);
+              return 'סינובום: ' + data[yr].sinoUnits + ' יח’ (' +
+                     (data[yr].share * 100).toFixed(1) + '%)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, title: { display: true, text: 'יחידות שוק' } },
+        ySino: {
+          type: 'linear', position: 'right',
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'סינובום (יח’)' },
+          ticks: { color: '#cc0000' }
+        }
+      }
+    }
+  });
+
+  // ── Share: line chart ──
+  _cShare = new Chart(document.getElementById('chartSimShare'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'נתח שוק סינובום (%)',
+        data: SIM_YEARS.map(function(y) { return parseFloat((data[y].share * 100).toFixed(2)); }),
+        borderColor: 'var(--sb-orange)',
+        backgroundColor: 'rgba(244,121,32,0.1)',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointBackgroundColor: SIM_YEARS.map(function(y) {
+          return data[y].kind === 'actual' ? '#29ABE2' : 'var(--sb-orange)';
+        }),
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'נתח שוק סינובום לאורך השנים (%)' }
+      },
+      scales: {
+        y: { min: 0, title: { display: true, text: '%' } }
+      }
+    }
+  });
+
+  // ── Revenue: bar chart ──
+  _cRev = new Chart(document.getElementById('chartSimRevenue'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'הכנסות סינובום ($M)',
+        data: SIM_YEARS.map(function(y) { return parseFloat((data[y].revenue / 1e6).toFixed(2)); }),
+        backgroundColor: SIM_YEARS.map(function(y) {
+          return data[y].kind === 'actual'   ? 'rgba(41,171,226,0.85)'
+               : data[y].kind === 'estimate' ? 'rgba(150,150,150,0.5)'
+               :                               'rgba(244,121,32,0.8)';
+        }),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'הכנסות שנתיות — סינובום ($M)' },
+        tooltip: { callbacks: { label: function(ctx) { return '$' + ctx.raw.toFixed(2) + 'M'; } } }
+      },
+      scales: { y: { title: { display: true, text: '$M' } } }
+    }
+  });
+
+  runSimulation();
+}
+// ========== END MARKET SIMULATOR ==========
+
 </script>
 </body>
 </html>
