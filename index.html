@@ -1504,7 +1504,7 @@ function initMarketCharts() {
         tooltip: {
           callbacks: {
             label: function(ctx) {
-              return ctx.raw.toLocaleString() + ' יח' (' +
+              return ctx.raw.toLocaleString() + ' יח (' +
                 (ctx.raw / mfrTotal * 100).toFixed(1) + '%)';
             }
           }
