@@ -124,11 +124,6 @@
         <i class="bi bi-table me-1"></i>כל&nbsp;הדגמים</a></li>
       <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabMarket">
         <i class="bi bi-bar-chart-line me-1"></i>ניתוח&nbsp;שוק</a></li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#tabSimulator">
-          <i class="bi bi-graph-up-arrow me-1"></i>סימולטור שוק
-        </a>
-      </li>
     </ul>
   </div>
 </div>
@@ -349,15 +344,15 @@
 <!-- ━━━━━━━━━━━━━━━━━━ TAB 4 – סימולטור שוק ━━━━━━━━━━━━━━━━━━ -->
 <div class="tab-pane fade" id="tabMarket">
 
-  <!-- Alert: why Gary's data -->
+  <!-- Info: data source -->
   <div class="alert d-flex gap-2 mb-3 align-items-start"
-       style="background:#fff8e6;border:1.5px solid #F47920;border-radius:10px;font-size:.87rem;">
-    <i class="bi bi-info-circle-fill mt-1" style="color:#F47920;font-size:1.1rem;flex-shrink:0;"></i>
+       style="background:#e8f7fd;border:1.5px solid var(--sb-blue);border-radius:10px;font-size:.87rem;">
+    <i class="bi bi-info-circle-fill mt-1" style="color:var(--sb-blue);font-size:1.1rem;flex-shrink:0;"></i>
     <div>
-      <strong>מדוע נתוני גארי ולא נתוני משרד התחבורה (משה"ת)?</strong><br>
-      כ-50% מהמספריים החשמלית (הקטגוריה הגדולה ביותר) אינן חייבות ברישוי כלי רכב — הן עוברות תקן מכון
-      התקנים כציוד תעשייתי ואינן מדווחות למשה"ת. גארי, כנציג יבואנים, רואה את <strong>כלל המסירות
-      האמיתיות</strong> בשוק. הנתונים שלו גבוהים בכ-65% מהנתונים הרשמיים.
+      <strong>מקור הנתונים:</strong>
+      הנתונים בטאב זה מבוססים על נתונים שהתקבלו מהיצרן ומשקפים את
+      <strong>סך כל המסירות בפועל</strong> בשוק הישראלי, כולל ציוד שאינו מחויב
+      ברישוי כלי רכב ולכן אינו מופיע בנתוני משרד התחבורה הרשמיים.
     </div>
   </div>
 
@@ -367,7 +362,6 @@
       <div class="card-box text-center h-100" style="border-top:4px solid var(--sb-blue);">
         <div style="font-size:2rem;font-weight:900;color:var(--sb-blue);">1,270</div>
         <div class="text-muted" style="font-size:.82rem;">יחידות נמסרו 2025</div>
-        <div class="mt-1"><span class="badge" style="background:var(--sb-light);color:var(--sb-blue2);font-size:.7rem;">מקור: גארי</span></div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
@@ -399,7 +393,7 @@
     <div class="col-lg-7">
       <div class="card-box h-100">
         <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
-          <i class="bi bi-bar-chart-fill me-1"></i>מסירות לפי סוג ושנה — נתוני גארי
+          <i class="bi bi-bar-chart-fill me-1"></i>מסירות שנתיות לפי סוג ציוד
         </h6>
         <canvas id="chartGaryTypes" style="max-height:280px;"></canvas>
       </div>
@@ -451,45 +445,7 @@
       </table>
     </div>
   </div>
-
-  <!-- Row: Line chart + Gary vs Official comparison -->
-  <div class="row g-3 mb-3">
-    <div class="col-lg-8">
-      <div class="card-box h-100">
-        <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
-          <i class="bi bi-graph-up me-1"></i>מגמת שוק — גארי לעומת נתונים רשמיים
-        </h6>
-        <canvas id="chartGaryVsOfficial" style="max-height:240px;"></canvas>
-        <div class="mt-2" style="font-size:.73rem;color:#888;">
-          * נתוני 2026 חלקיים (ינואר–מאי). הקו המקווקו = היקף שנתי משוער בהיוון x2.4
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="card-box h-100">
-        <h6 class="fw-bold mb-2" style="color:var(--sb-blue);">
-          <i class="bi bi-question-circle me-1"></i>מדוע הפער?
-        </h6>
-        <div style="font-size:.81rem;line-height:1.6;">
-          <div class="mb-2 p-2 rounded" style="background:#fff3cd;">
-            <strong>מספריים חשמלית קטנה</strong><br>
-            נרשמות כ"ציוד תעשייתי" ולא כרכב — אינן מדווחות למשה"ת.<br>
-            גארי: 907 יח׳ | משה"ת: 299 יח׳ (פער: ×3)
-          </div>
-          <div class="mb-2 p-2 rounded" style="background:#e8f7fd;">
-            <strong>מנוף עצמאי (VL/ML)</strong><br>
-            גארי: 29 יח׳ | משה"ת: 5 יח׳ (פער: ×6)
-          </div>
-          <div class="p-2 rounded" style="background:#f0f0f0;">
-            <strong>בום מפרקי + טלסקופי</strong><br>
-            נתונים דומים — חייבים ברישוי מלא.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ MARKET SHARE SIMULATOR ═══════ -->
+ ═══════ -->
   <div class="card-box mb-3" style="border:2px solid var(--sb-orange);border-radius:14px;">
     <h6 class="fw-bold mb-1" style="color:var(--sb-orange);font-size:1.05rem;">
       <i class="bi bi-sliders me-1"></i>סימולטור נתח שוק — סינובום
@@ -558,259 +514,41 @@
     </div>
   </div>
 
-  <!-- Sinoboom in Israel -->
+
+  <!-- Manufacturer Competitive Ranking -->
   <div class="card-box">
     <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
-      <i class="bi bi-pin-map me-1"></i>סינובום בישראל — דגמים רשומים (נתוני גארי / משה"ת)
+      <i class="bi bi-trophy me-1"></i>ניתוח תחרותי &mdash; נתח שוק לפי יצרן
     </h6>
-    <div class="table-responsive">
-      <table class="table table-sm table-hover mb-0" style="font-size:.84rem;">
-        <thead style="background:var(--sb-light);">
-          <tr>
-            <th>דגם</th>
-            <th class="text-center">יחידות</th>
-            <th>סוג</th>
-            <th>גובה עבודה משוער</th>
-            <th>הערות</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background:#fff8f0;">
-            <td class="fw-bold" style="color:var(--sb-orange);">GTZZ15J</td>
-            <td class="text-center fw-bold">27</td>
-            <td>בום מפרקי (דיזל)</td>
-            <td>~15 מ׳</td>
-            <td>הדגם הנמכר ביותר של סינובום בישראל</td>
-          </tr>
-          <tr><td class="fw-bold">GTJZ1218D</td><td class="text-center">8</td><td>מספריים שטח (דיזל)</td><td>~12 מ׳</td><td>מקביל ל-1218RD</td></tr>
-          <tr><td class="fw-bold">TB22J PLUS</td><td class="text-center">5</td><td>בום ישר (טלסקופי)</td><td>~22 מ׳</td><td>מקביל ל-TB22J Plus</td></tr>
-          <tr><td class="fw-bold">GTZZ15J-3</td><td class="text-center">4</td><td>בום מפרקי (דיזל)</td><td>~15 מ׳</td><td>וריאנט של GTZZ15J</td></tr>
-          <tr><td class="fw-bold">GTZZ25J</td><td class="text-center">3</td><td>בום מפרקי (דיזל)</td><td>~25 מ׳</td><td>מקביל ל-AB22EJ Plus</td></tr>
-          <tr><td class="fw-bold" style="color:var(--sb-blue);">AB14EJ</td><td class="text-center">2</td><td>בום מפרקי (חשמלי)</td><td>16 מ׳</td>
-            <td><a href="#" onclick="switchToTab1('AB14EJ');return false;" class="text-decoration-none" style="color:var(--sb-blue);font-size:.78rem;"><i class="bi bi-box-arrow-up-right me-1"></i>הצג בטאב 1</a></td>
-          </tr>
-          <tr><td class="fw-bold">GTZZ14EJ</td><td class="text-center">1</td><td>בום מפרקי (חשמלי)</td><td>~14 מ׳</td><td></td></tr>
-          <tr><td class="fw-bold">GTZZ18J</td><td class="text-center">1</td><td>בום מפרקי (דיזל)</td><td>~18 מ׳</td><td>מקביל ל-AB18J</td></tr>
-          <tr><td class="fw-bold">GTZZ16EJ</td><td class="text-center">1</td><td>בום מפרקי (חשמלי)</td><td>~16 מ׳</td><td></td></tr>
-          <tr><td class="fw-bold">GTJZZ15J</td><td class="text-center">1</td><td>בום מפרקי</td><td>~15 מ׳</td><td></td></tr>
-          <tr style="background:var(--sb-light);font-weight:700;">
-            <td>סה"כ</td><td class="text-center">53</td><td colspan="3">1.3% נתח שוק</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="mt-2" style="font-size:.72rem;color:#aaa;">
-      מקור: נתוני גארי + רישוי משרד התחבורה. הפוטנציאל הגדול ביותר: מספריים חשמלית (אפס נוכחות!) ובום מפרקי.
+    <div class="row g-3 align-items-start">
+      <div class="col-lg-7">
+        <canvas id="chartMfrShare" style="max-height:280px;"></canvas>
+      </div>
+      <div class="col-lg-5">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover mb-0" style="font-size:.84rem;">
+            <thead style="background:var(--sb-blue);color:#fff;">
+              <tr>
+                <th class="text-center">#</th>
+                <th>יצרן</th>
+                <th class="text-center">יחידות</th>
+                <th class="text-center">נתח</th>
+              </tr>
+            </thead>
+            <tbody id="mfrRankBody"></tbody>
+          </table>
+        </div>
+        <div class="mt-2" style="font-size:.72rem;color:#888;">
+          נתון מצטבר &mdash; כלל השוק הישראלי. מודגש: דירוג סינובום.
+        </div>
+      </div>
     </div>
   </div>
+
+
 
 </div><!-- /tabMarket -->
 
-<div class="tab-pane fade" id="tabSimulator">
-  <div class="alert mb-3 d-flex align-items-start gap-2"
-       style="background:#fff8e1;border:1.5px solid #f9a825;border-radius:8px;" role="alert">
-    <i class="bi bi-info-circle-fill fs-5 mt-1" style="color:#f9a825;flex-shrink:0;"></i>
-    <div class="small lh-base">
-      <strong>מקור נתוני הבסיס:</strong>
-      נתוני השוק לשנים <strong>2024&ndash;2025</strong> התקבלו ישירות מ-<strong>SINOBOOM</strong> (יצרן).
-      נתוני <strong>2022&ndash;2023</strong> הינם <em>הערכה</em> המבוססת על יחס בין נתוני היצרן לנתוני משרד התחבורה.
-      נתוני <strong>2026&ndash;2028</strong> הינם <em>תחזית</em> הנגזרת מהנחות המשתמש בלבד.
-    </div>
-  </div>
-  <div class="row g-3 mb-3">
-
-    <!-- ASSUMPTIONS PANEL -->
-    <div class="col-lg-4">
-      <div class="card h-100 border-0 shadow-sm">
-        <div class="card-header fw-bold text-white d-flex align-items-center gap-2" style="background:var(--sb-blue);">
-          <i class="bi bi-sliders"></i>הנחות סימולציה
-        </div>
-        <div class="card-body">
-
-          <!-- Growth -->
-          <p class="fw-semibold small text-muted mb-2 mt-1">
-            <i class="bi bi-graph-up-arrow me-1" style="color:var(--sb-blue);"></i>צמיחת שוק שנתית
-          </p>
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label small mb-0 fw-semibold">שנת 2026</label>
-              <span class="badge bg-primary px-2" id="g2026Val">+10.0%</span>
-            </div>
-            <input type="range" class="form-range" id="g2026"
-                   min="-20" max="60" step="1" value="10"
-                   oninput="syncSim('g2026',this.value,true)">
-            <div style="height:12px;"></div>
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label small mb-0 fw-semibold">שנת 2027</label>
-              <span class="badge bg-primary px-2" id="g2027Val">+8.0%</span>
-            </div>
-            <input type="range" class="form-range" id="g2027"
-                   min="-20" max="60" step="1" value="8"
-                   oninput="syncSim('g2027',this.value,true)">
-            <div style="height:12px;"></div>
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label small mb-0 fw-semibold">שנת 2028</label>
-              <span class="badge bg-primary px-2" id="g2028Val">+8.0%</span>
-            </div>
-            <input type="range" class="form-range" id="g2028"
-                   min="-20" max="60" step="1" value="8"
-                   oninput="syncSim('g2028',this.value,true)">
-          </div>
-          <hr class="my-2">
-
-          <!-- Share Target -->
-          <p class="fw-semibold small text-muted mb-2">
-            <i class="bi bi-bullseye me-1" style="color:var(--sb-orange);"></i>יעד נתח שוק &mdash; סינובום
-          </p>
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label small mb-0 fw-semibold">שנת 2026</label>
-              <span class="badge px-2" style="background:var(--sb-orange);" id="s2026Val">2.0%</span>
-            </div>
-            <input type="range" class="form-range" id="s2026"
-                   min="0.5" max="25" step="0.5" value="2"
-                   oninput="syncSim('s2026',this.value,false)">
-            <div style="height:12px;"></div>
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label small mb-0 fw-semibold">שנת 2027</label>
-              <span class="badge px-2" style="background:var(--sb-orange);" id="s2027Val">5.0%</span>
-            </div>
-            <input type="range" class="form-range" id="s2027"
-                   min="0.5" max="25" step="0.5" value="5"
-                   oninput="syncSim('s2027',this.value,false)">
-            <div style="height:12px;"></div>
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label small mb-0 fw-semibold">שנת 2028</label>
-              <span class="badge px-2" style="background:var(--sb-orange);" id="s2028Val">8.0%</span>
-            </div>
-            <input type="range" class="form-range" id="s2028"
-                   min="0.5" max="25" step="0.5" value="8"
-                   oninput="syncSim('s2028',this.value,false)">
-          </div>
-          <hr class="my-2">
-
-          <!-- Prices -->
-          <p class="fw-semibold small text-muted mb-2">
-            <i class="bi bi-currency-dollar me-1" style="color:#2ecc71;"></i>מחיר ממוצע לסוג ($)
-          </p>
-          <div class="d-flex flex-column gap-1">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text" style="min-width:130px;font-size:10px;">מספריים קטנה</span>
-              <span class="input-group-text small">$</span>
-              <input type="number" id="pEscSmall" value="10000" class="form-control form-control-sm" onchange="runSimulation()">
-            </div>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text" style="min-width:130px;font-size:10px;">מספריים גדולה</span>
-              <span class="input-group-text small">$</span>
-              <input type="number" id="pEscMid" value="31000" class="form-control form-control-sm" onchange="runSimulation()">
-            </div>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text" style="min-width:130px;font-size:10px;">בום מפרקי</span>
-              <span class="input-group-text small">$</span>
-              <input type="number" id="pArt" value="65000" class="form-control form-control-sm" onchange="runSimulation()">
-            </div>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text" style="min-width:130px;font-size:10px;">בום ישר (טלסקופי)</span>
-              <span class="input-group-text small">$</span>
-              <input type="number" id="pTele" value="75000" class="form-control form-control-sm" onchange="runSimulation()">
-            </div>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text" style="min-width:130px;font-size:10px;">מנוף עצמאי VL/ML</span>
-              <span class="input-group-text small">$</span>
-              <input type="number" id="pSelf" value="7500" class="form-control form-control-sm" onchange="runSimulation()">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-8 d-flex flex-column gap-3">
-      <div class="row g-2">
-        <div class="col-6 col-md-3">
-          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
-            <div class="small text-muted">שוק כולל 2028</div>
-            <div class="fw-bold" style="font-size:1.5rem;color:var(--sb-blue);" id="kpiMkt2028">&#8212;</div>
-            <div class="text-muted" style="font-size:11px;">יחידות (תחזית)</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
-            <div class="small text-muted">יחידות סינובום 2028</div>
-            <div class="fw-bold" style="font-size:1.5rem;color:var(--sb-orange);" id="kpiSino2028">&#8212;</div>
-            <div class="text-muted" style="font-size:11px;">לפי נתח יעד</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
-            <div class="small text-muted">הכנסה שנתית 2028</div>
-            <div class="fw-bold" style="font-size:1.5rem;color:#27ae60;" id="kpiRev2028">&#8212;</div>
-            <div class="text-muted" style="font-size:11px;">מכירות ($)</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="card text-center border-0 shadow-sm py-2 px-1 h-100">
-            <div class="small text-muted">CAGR שוק 25&#8594;28</div>
-            <div class="fw-bold" style="font-size:1.5rem;color:var(--sb-blue2);" id="kpiCagr">&#8212;</div>
-            <div class="text-muted" style="font-size:11px;">שיעור צמיחה שנתי</div>
-          </div>
-        </div>
-      </div>
-      <div class="card border-0 shadow-sm flex-grow-1">
-        <div class="card-body p-2">
-          <canvas id="chartSimMain" height="210"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-3 mb-3">
-    <div class="col-md-6">
-      <div class="card border-0 shadow-sm">
-        <div class="card-header small fw-semibold bg-light border-bottom">
-          <i class="bi bi-pie-chart me-1"></i>התפתחות נתח שוק סינובום (%)
-        </div>
-        <div class="card-body p-2"><canvas id="chartSimShare" height="180"></canvas></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card border-0 shadow-sm">
-        <div class="card-header small fw-semibold bg-light border-bottom">
-          <i class="bi bi-cash-stack me-1"></i>הכנסות שנתיות &mdash; סינובום ($M)
-        </div>
-        <div class="card-body p-2"><canvas id="chartSimRevenue" height="180"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card border-0 shadow-sm mb-3">
-    <div class="card-header small fw-semibold bg-light border-bottom">
-      <i class="bi bi-table me-1"></i>טבלת תחזית מלאה 2022&ndash;2028
-    </div>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-sm table-hover mb-0 text-center small">
-          <thead class="table-dark">
-            <tr>
-              <th>שנה</th><th>שוק כולל</th>
-              <th>מספריים קטנה</th><th>מספריים גדולה</th>
-              <th>בום מפרקי</th><th>בום ישר</th><th>מנוף עצמאי</th>
-              <th style="color:#f47920;font-weight:700;">יח&#39; סינובום</th>
-              <th>נתח</th><th>הכנסה ($M)</th><th>סטטוס</th>
-            </tr>
-          </thead>
-          <tbody id="simTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="d-flex gap-4 flex-wrap small text-muted pb-2">
-    <span><span class="badge bg-success me-1">&#10003;</span>נתון אמיתי &mdash; מקור SINOBOOM (יצרן)</span>
-    <span><span class="badge bg-secondary me-1">&#126;</span>הערכה &mdash; מחושב על פי יחס יצרן / משה&quot;ת</span>
-    <span><span class="badge me-1" style="background:var(--sb-orange);">&#9670;</span>תחזית &mdash; מבוסס הנחות המשתמש</span>
-  </div>
-
-</div><!-- /tabSimulator -->
 
 
 <!-- /tabMarket -->
@@ -1508,223 +1246,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCatalog();
   onHeightChange(6);
 });
-
-// ══════════════════════════════════════════════
-//  TAB 4 – MARKET ANALYSIS
-//  מקור נתונים: רשם החברות ישראל | קוד 539
-// ══════════════════════════════════════════════
-
-const MARKET_DATA = {
-  total: 4207,
-  byManufacturer: [
-    { name: "JLG",       units: 1823, pct: 43.3 },
-    { name: "GENIE",     units: 1137, pct: 27.0 },
-    { name: "LGMG",      units:  317, pct:  7.5 },
-    { name: "NIFTYLIFT", units:  203, pct:  4.8 },
-    { name: "HAULOTTE",  units:  126, pct:  3.0 },
-    { name: "DINGLI",    units:  114, pct:  2.7 },
-    { name: "MAGNI",     units:   94, pct:  2.2 },
-    { name: "SNORKEL",   units:   79, pct:  1.9 },
-    { name: "ZOOM LION", units:   61, pct:  1.4 },
-    { name: "SINOBOOM",  units:   53, pct:  1.3 },
-    { name: "SKYJACK",   units:   39, pct:  0.9 },
-    { name: "TEREX",     units:   34, pct:  0.8 },
-    { name: "LIUGONG",   units:   29, pct:  0.7 },
-    { name: "AIRO",      units:   23, pct:  0.5 },
-    { name: "XCMG",      units:   15, pct:  0.4 },
-    { name: "אחרים",     units:   57, pct:  1.4 }
-  ],
-  byYear: [
-    { year: "2022", units: 603 },
-    { year: "2023", units: 547 },
-    { year: "2024", units: 502 },
-    { year: "2025", units: 763 },
-    { year: "2026*", units: 271 }
-  ],
-  byType: [
-    { label: "מספריים חשמלי",           units: 1784, pct: 42.4 },
-    { label: "בום מפרקי (ארטיקולטור)",   units: 1639, pct: 39.0 },
-    { label: "בום ישר (טלסקופי)",        units:  458, pct: 10.9 },
-    { label: "מספריים שטח",              units:  326, pct:  7.7 }
-  ],
-  topModels: [
-    { mfr: "JLG",      model: "ES1932",      type: "מספריים חשמלי",  units: 373, sinoId: "0608SE"     },
-    { mfr: "GENIE",    model: "Z45.25J",     type: "בום מפרקי",      units: 275, sinoId: "AB15J_Plus" },
-    { mfr: "JLG",      model: "ES1530L",     type: "מספריים חשמלי",  units: 269, sinoId: null         },
-    { mfr: "GENIE",    model: "Z51-30J",     type: "בום מפרקי",      units: 262, sinoId: "AB18J"      },
-    { mfr: "JLG",      model: "520AJ",       type: "בום מפרקי",      units: 148, sinoId: "AB18J"      },
-    { mfr: "JLG",      model: "ES2646",      type: "מספריים חשמלי",  units: 100, sinoId: "1012E"      },
-    { mfr: "GENIE",    model: "Z34.22",      type: "בום מפרקי",      units:  79, sinoId: null         },
-    { mfr: "JLG",      model: "R4045",       type: "מספריים שטח",    units:  78, sinoId: null         },
-    { mfr: "JLG",      model: "ES2632",      type: "מספריים חשמלי",  units:  77, sinoId: null         },
-    { mfr: "JLG",      model: "450AJ",       type: "בום מפרקי",      units:  73, sinoId: "AB15J_Plus" },
-    { mfr: "GENIE",    model: "Z45.25JRT",   type: "בום מפרקי",      units:  68, sinoId: "AB15J_Plus" },
-    { mfr: "JLG",      model: "660SJ",       type: "טלסקופי",        units:  66, sinoId: "TB22J_Plus"  },
-    { mfr: "LGMG",     model: "S0607EII",    type: "מספריים חשמלי",  units:  63, sinoId: "0608SE"     },
-    { mfr: "SNORKEL",  model: "A38E",        type: "בום מפרקי",      units:  63, sinoId: null         },
-    { mfr: "JLG",      model: "1200SJP",     type: "טלסקופי",        units:  62, sinoId: null         }
-  ],
-  sinoboomInIsrael: [
-    { model: "GTZZ15J",    type: "בום מפרקי",         units: 27, sinoId: null          },
-    { model: "GTJZ1218D",  type: "מספריים שטח דיזל",  units:  8, sinoId: "1218RD"      },
-    { model: "TB22J PLUS", type: "בום ישר טלסקופי",   units:  5, sinoId: "TB22J_Plus"  },
-    { model: "GTZZ15J-3",  type: "בום מפרקי",         units:  4, sinoId: null          },
-    { model: "GTZZ25J",    type: "בום מפרקי",         units:  3, sinoId: null          },
-    { model: "AB14EJ",     type: "בום מפרקי חשמלי",   units:  2, sinoId: "AB14EJ"      },
-    { model: "GTZZ14EJ",   type: "בום מפרקי",         units:  1, sinoId: null          },
-    { model: "GTZZ18J",    type: "בום מפרקי",         units:  1, sinoId: null          },
-    { model: "GTZZ16EJ",   type: "בום מפרקי חשמלי",   units:  1, sinoId: null          },
-    { model: "GTJZZ15J",   type: "מספריים שטח",       units:  1, sinoId: null          }
-  ]
-};
-
-const CHART_PALETTE = [
-  '#29ABE2','#F47920','#2ECC71','#9B59B6',
-  '#E74C3C','#F39C12','#1ABC9C','#3498DB',
-  '#E67E22','#95A5A6'
-];
-
-document.addEventListener("DOMContentLoaded", () => {
-  // ── Manufacturer bar chart ──────────────────
-  const mfrTop10 = MARKET_DATA.byManufacturer.slice(0, 10);
-  new Chart(document.getElementById("chartMfr"), {
-    type: "bar",
-    data: {
-      labels: mfrTop10.map(d => d.name),
-      datasets: [{
-        label: "יחידות",
-        data:  mfrTop10.map(d => d.units),
-        backgroundColor: mfrTop10.map((d, i) =>
-          d.name === "SINOBOOM" ? "#F47920" : CHART_PALETTE[i % CHART_PALETTE.length]
-        ),
-        borderRadius: 5,
-        borderSkipped: false
-      }]
-    },
-    options: {
-      indexAxis: "y",
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.x.toLocaleString()} יח׳  (${mfrTop10[ctx.dataIndex].pct}%)`
-          }
-        }
-      },
-      scales: {
-        x: { grid: { color: "#f0f0f0" }, ticks: { font: { size: 11 } } },
-        y: { ticks: { font: { size: 12, weight: "bold" } } }
-      }
-    }
-  });
-
-  // ── Platform type doughnut ──────────────────
-  new Chart(document.getElementById("chartType"), {
-    type: "doughnut",
-    data: {
-      labels: MARKET_DATA.byType.map(d => d.label),
-      datasets: [{
-        data: MARKET_DATA.byType.map(d => d.units),
-        backgroundColor: ["#29ABE2","#F47920","#2ECC71","#9B59B6"],
-        borderWidth: 2,
-        borderColor: "#fff"
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "bottom",
-          labels: { font: { size: 11 }, padding: 12 }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.label}: ${ctx.parsed.toLocaleString()} יח׳ (${MARKET_DATA.byType[ctx.dataIndex].pct}%)`
-          }
-        }
-      },
-      cutout: "58%"
-    }
-  });
-
-  // ── Yearly registrations line chart ─────────
-  new Chart(document.getElementById("chartYear"), {
-    type: "line",
-    data: {
-      labels: MARKET_DATA.byYear.map(d => d.year),
-      datasets: [{
-        label: "רישומים חדשים",
-        data:  MARKET_DATA.byYear.map(d => d.units),
-        borderColor: "#29ABE2",
-        backgroundColor: "rgba(41,171,226,0.12)",
-        borderWidth: 3,
-        pointBackgroundColor: MARKET_DATA.byYear.map((d, i) =>
-          i === MARKET_DATA.byYear.length - 1 ? "#F47920" : "#29ABE2"
-        ),
-        pointRadius: 6,
-        tension: 0.35,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.y.toLocaleString()} יח׳`
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: false,
-          grid: { color: "#f0f0f0" },
-          ticks: { font: { size: 11 } }
-        },
-        x: { ticks: { font: { size: 12, weight: "bold" } } }
-      }
-    }
-  });
-
-  // ── Top 15 models table ──────────────────────
-  const topBody = document.getElementById("marketTopBody");
-  topBody.innerHTML = MARKET_DATA.topModels.map((row, i) => {
-    const sinoModel = row.sinoId ? MODELS.find(m => m.id === row.sinoId) : null;
-    const sinoCell  = sinoModel
-      ? `<a href="#" onclick="activateModelTab('${sinoModel.id}'); return false;"
-            style="color:var(--sb-blue);font-weight:700;">${sinoModel.name}</a>`
-      : `<span style="color:#aaa;font-size:.78rem;">אין התאמה ישירה</span>`;
-    return `<tr>
-      <td style="font-size:.82rem;color:#888;">${i + 1}</td>
-      <td style="font-size:.82rem;font-weight:700;">${row.mfr}</td>
-      <td style="font-size:.82rem;font-weight:800;color:#1a1a2e;">${row.model}</td>
-      <td style="font-size:.78rem;">${row.type}</td>
-      <td style="font-size:.82rem;font-weight:700;">${row.units.toLocaleString()}</td>
-      <td style="font-size:.82rem;">${((row.units / MARKET_DATA.total) * 100).toFixed(1)}%</td>
-      <td style="font-size:.82rem;">${sinoCell}</td>
-    </tr>`;
-  }).join("");
-
-  // ── Sinoboom models in Israel table ─────────
-  const sinoBody = document.getElementById("marketSinoBody");
-  sinoBody.innerHTML = MARKET_DATA.sinoboomInIsrael.map(row => {
-    const sinoModel = row.sinoId ? MODELS.find(m => m.id === row.sinoId) : null;
-    const linkCell  = sinoModel
-      ? `<a href="#" onclick="activateModelTab('${sinoModel.id}'); return false;"
-            style="color:var(--sb-blue);font-weight:700;">
-            <i class="bi bi-search me-1"></i>הצג ב-Tab 1</a>`
-      : `<span style="color:#aaa;font-size:.78rem;">דגם ישן / לא בקטלוג</span>`;
-    return `<tr style="background:var(--sb-light);">
-      <td style="font-weight:800;color:var(--sb-blue);font-size:.85rem;">${row.model}</td>
-      <td style="font-size:.82rem;">${row.type}</td>
-      <td style="font-weight:700;font-size:.85rem;">${row.units}</td>
-      <td style="font-size:.82rem;">${linkCell}</td>
-    </tr>`;
-  }).join("");
-});
-
+ and highlight a model
 // Navigate to Tab 1 and highlight a model
 function activateModelTab(modelId) {
   const tabEl = document.querySelector('a[href="#tabSelect"]');
@@ -1824,448 +1346,152 @@ function switchToTab1(modelId) {
 }
 
 function initMarketCharts() {
-  const palette = ['#29ABE2','#F47920','#2ecc71','#9b59b6','#1090C4'];
-
-  // ── 1. Grouped bar: types × years ──
-  const ctx1 = document.getElementById('chartGaryTypes');
-  if (ctx1) {
-    new Chart(ctx1, {
-      type: 'bar',
-      data: {
-        labels: GARY.types.map(t => t.heb),
-        datasets: [
-          { label: '2024', data: GARY.types.map(t => t.y24), backgroundColor: palette.map(c => c + 'aa') },
-          { label: '2025', data: GARY.types.map(t => t.y25), backgroundColor: palette }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: 'top' } },
-        scales: { x: { ticks: { font: { size: 11 } } }, y: { beginAtZero: true } }
-      }
-    });
-  }
-
-  // ── 2. Doughnut: type share 2025 ──
-  const ctx2 = document.getElementById('chartGaryDoughnut');
-  if (ctx2) {
-    new Chart(ctx2, {
-      type: 'doughnut',
-      data: {
-        labels: GARY.types.map(t => t.heb),
-        datasets: [{ data: GARY.types.map(t => t.y25), backgroundColor: palette, borderWidth: 2 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} יח׳ (${(ctx.raw/GARY.gary.y25*100).toFixed(1)}%)` } }
-        },
-        cutout: '60%'
-      }
-    });
-    // Manual legend
-    const leg = document.getElementById('doughnutLegend');
-    if (leg) {
-      leg.innerHTML = GARY.types.map((t,i) =>
-        `<span style="display:inline-flex;align-items:center;gap:4px;margin-left:10px;margin-bottom:4px;">
-          <span style="width:10px;height:10px;border-radius:50%;background:${palette[i]};display:inline-block;"></span>
-          ${t.heb} (${(t.y25/GARY.gary.y25*100).toFixed(0)}%)
-        </span>`
-      ).join('');
-    }
-  }
-
-  // ── 3. Line: Gary vs official ──
-  const ctx3 = document.getElementById('chartGaryVsOfficial');
-  if (ctx3) {
-    new Chart(ctx3, {
-      type: 'line',
-      data: {
-        labels: ['2022','2023','2024','2025','2026 (חלקי)'],
-        datasets: [
-          {
-            label: 'נתוני גארי (שוק אמיתי)',
-            data: [null, null, GARY.gary.y24, GARY.gary.y25, GARY.gary.y26p],
-            borderColor: '#F47920', backgroundColor: '#F4792022',
-            borderWidth: 3, pointRadius: 5, tension: 0.3, fill: true
-          },
-          {
-            label: 'נתוני משה"ת (רשמי)',
-            data: [GARY.official.y22, GARY.official.y23, GARY.official.y24, GARY.official.y25, GARY.official.y26p],
-            borderColor: '#29ABE2', backgroundColor: '#29ABE222',
-            borderWidth: 3, pointRadius: 5, tension: 0.3, fill: true
-          }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: 'top' } },
-        scales: { y: { beginAtZero: true, title: { display: true, text: 'יחידות' } } }
-      }
-    });
-  }
-
-  // ── 4. Simulator bar chart ──
-  const ctx4 = document.getElementById('chartSimulator');
-  if (ctx4) {
-    window._simoChart = new Chart(ctx4, {
-      type: 'bar',
-      data: {
-        labels: GARY.types.map(t => t.heb),
-        datasets: [
-          { label: 'שוק 2025', data: GARY.types.map(t => t.y25), backgroundColor: palette.map(c => c + '55') },
-          { label: 'יעד סינובום', data: GARY.types.map(t => Math.round(t.y25 * 0.05)),
-            backgroundColor: '#F47920', borderRadius: 4 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: 'top' }, title: { display: true, text: 'יחידות: שוק מלא vs. יעד סינובום' } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-  }
-
-  // ── Populate type table ──
-  const tbody = document.getElementById('marketTypeTable');
-  if (tbody) {
-    const total25 = GARY.gary.y25;
-    tbody.innerHTML = GARY.types.map((t, i) => {
-      const growth = ((t.y25 - t.y24) / t.y24 * 100).toFixed(0);
-      const pct25  = (t.y25 / total25 * 100).toFixed(1);
-      const value25 = (t.y25 * t.avg).toLocaleString('en-US', {style:'currency',currency:'USD',maximumFractionDigits:0});
-      const sinoStr = t.sino.length
-        ? `<span style="color:var(--sb-blue);font-size:.77rem;">${t.sino.join(' · ')}</span>`
-        : '<span class="text-muted" style="font-size:.77rem;">אין דגם נוכחי — הזדמנות!</span>';
-      const growthColor = growth > 0 ? '#2ecc71' : '#e74c3c';
-      return `<tr>
-        <td><span class="fw-bold" style="color:${palette[i]};">● </span>${t.heb}</td>
-        <td class="text-center">${t.y24}</td>
-        <td class="text-center fw-bold">${t.y25}</td>
-        <td class="text-center fw-bold" style="color:${growthColor};">${growth>0?'+':''}${growth}%</td>
-        <td class="text-center">${pct25}%</td>
-        <td class="text-center">${fmtUSD(t.avg)}</td>
-        <td class="text-center">${value25}</td>
-        <td>${sinoStr}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  // Init simulator display
-  updateSimulator(5);
-}
-
-document.addEventListener("DOMContentLoaded", initMarketCharts);
-
-// ========== MARKET SIMULATOR TAB ==========
-const SIM_DATA = {
-  official: {2022:603,2023:547},
-  garyFactor: 1.684,
-  actual: {
-    2024:{ total:856,  types:{escSmall:546,escMid:16,art:178,selfProp:63,tele:53} },
-    2025:{ total:1270, types:{escSmall:907,escMid:51,art:216,selfProp:29,tele:67} }
-  },
-  sinoBaseShare: 0.013,
-  colors:{
-    escSmall:'#F47920', escMid:'#2ecc71', art:'#29ABE2',
-    selfProp:'#9b59b6', tele:'#1090C4'
-  },
-  labels:{
-    escSmall:'מספריים קטנה', escMid:'מספריים גדולה', art:'בום מפרקי',
-    selfProp:'מנוף עצמאי', tele:'בום ישר'
-  }
-};
-let _cMain, _cShare, _cRev;
-const SIM_YEARS = [2022,2023,2024,2025,2026,2027,2028];
-
-function syncSim(id, val, withSign) {
-  var v = parseFloat(val);
-  var txt = withSign
-    ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%'
-    : v.toFixed(1) + '%';
-  document.getElementById(id + 'Val').textContent = txt;
-  runSimulation();
-}
-
-function _readInputs() {
-  return {
-    g: {
-      2026: parseFloat(document.getElementById('g2026').value) / 100,
-      2027: parseFloat(document.getElementById('g2027').value) / 100,
-      2028: parseFloat(document.getElementById('g2028').value) / 100
-    },
-    s: {
-      2022: SIM_DATA.sinoBaseShare,
-      2023: SIM_DATA.sinoBaseShare,
-      2024: SIM_DATA.sinoBaseShare,
-      2025: SIM_DATA.sinoBaseShare,
-      2026: parseFloat(document.getElementById('s2026').value) / 100,
-      2027: parseFloat(document.getElementById('s2027').value) / 100,
-      2028: parseFloat(document.getElementById('s2028').value) / 100
-    },
-    p: {
-      escSmall: parseInt(document.getElementById('pEscSmall').value) || 10000,
-      escMid:   parseInt(document.getElementById('pEscMid').value)   || 31000,
-      art:      parseInt(document.getElementById('pArt').value)      || 65000,
-      tele:     parseInt(document.getElementById('pTele').value)     || 75000,
-      selfProp: parseInt(document.getElementById('pSelf').value)     || 7500
-    }
-  };
-}
-
-function _buildRows(inp) {
-  var act24 = SIM_DATA.actual[2024];
-  var act25 = SIM_DATA.actual[2025];
-  var f = SIM_DATA.garyFactor;
-  var rows = {};
-
-  // distributions for scaling
-  var dist24 = {};
-  var dist25 = {};
-  var keys = ['escSmall','escMid','art','selfProp','tele'];
-  keys.forEach(function(k) {
-    dist24[k] = act24.types[k] / act24.total;
-    dist25[k] = act25.types[k] / act25.total;
-  });
-
-  SIM_YEARS.forEach(function(yr) {
-    var total, types, kind;
-
-    if (yr === 2024) {
-      total = act24.total;
-      types = Object.assign({}, act24.types);
-      kind = 'actual';
-    } else if (yr === 2025) {
-      total = act25.total;
-      types = Object.assign({}, act25.types);
-      kind = 'actual';
-    } else if (yr <= 2023) {
-      total = Math.round(SIM_DATA.official[yr] * f);
-      types = {};
-      keys.forEach(function(k) { types[k] = Math.round(total * dist24[k]); });
-      kind = 'estimate';
-    } else {
-      total = Math.round(rows[yr - 1].total * (1 + inp.g[yr]));
-      types = {};
-      keys.forEach(function(k) { types[k] = Math.round(total * dist25[k]); });
-      kind = 'proj';
-    }
-
-    var share = inp.s[yr];
-    var sinoUnits = Math.round(total * share);
-
-    // weighted avg price from type mix
-    var typeSum = keys.reduce(function(a, k) { return a + types[k]; }, 0) || 1;
-    var wavg = keys.reduce(function(a, k) {
-      return a + (types[k] / typeSum) * (inp.p[k] || 0);
-    }, 0);
-    var revenue = sinoUnits * wavg;
-
-    rows[yr] = { total: total, types: types, share: share,
-                 sinoUnits: sinoUnits, revenue: revenue, kind: kind };
-  });
-
-  return rows;
-}
-
-function runSimulation() {
-  var inp = _readInputs();
-  var data = _buildRows(inp);
-  var d28 = data[2028];
-  var d25 = data[2025];
-
-  // KPIs
-  document.getElementById('kpiMkt2028').textContent  = d28.total.toLocaleString();
-  document.getElementById('kpiSino2028').textContent = d28.sinoUnits.toLocaleString();
-  document.getElementById('kpiRev2028').textContent  = '$' + (d28.revenue / 1e6).toFixed(1) + 'M';
-  var cagr = d25.total > 0 ? (Math.pow(d28.total / d25.total, 1/3) - 1) * 100 : 0;
-  document.getElementById('kpiCagr').textContent = (cagr >= 0 ? '+' : '') + cagr.toFixed(1) + '%';
-
-  // TABLE
-  var tbody = document.getElementById('simTableBody');
-  tbody.innerHTML = '';
-  SIM_YEARS.forEach(function(yr) {
-    var d = data[yr];
-    var badge = d.kind === 'actual'
-      ? '<span class="badge bg-success">&#10003; אמיתי</span>'
-      : d.kind === 'estimate'
-        ? '<span class="badge bg-secondary">&#126; הערכה</span>'
-        : '<span class="badge" style="background:var(--sb-orange);">&#9670; תחזית</span>';
-    tbody.insertAdjacentHTML('beforeend',
-      '<tr class="' + (d.kind === 'actual' ? 'table-light' : '') + '">' +
-      '<td class="fw-bold">' + yr + '</td>' +
-      '<td>' + d.total.toLocaleString() + '</td>' +
-      '<td>' + (d.types.escSmall || 0).toLocaleString() + '</td>' +
-      '<td>' + (d.types.escMid   || 0).toLocaleString() + '</td>' +
-      '<td>' + (d.types.art      || 0).toLocaleString() + '</td>' +
-      '<td>' + (d.types.tele     || 0).toLocaleString() + '</td>' +
-      '<td>' + (d.types.selfProp || 0).toLocaleString() + '</td>' +
-      '<td class="fw-bold" style="color:var(--sb-orange);">' + d.sinoUnits.toLocaleString() + '</td>' +
-      '<td>' + (d.share * 100).toFixed(1) + '%</td>' +
-      '<td>' + (d.revenue > 0 ? '$' + (d.revenue / 1e6).toFixed(2) + 'M' : '&#8212;') + '</td>' +
-      '<td>' + badge + '</td>' +
-      '</tr>'
-    );
-  });
-
-  // CHART DATA
-  var labels = SIM_YEARS.map(String);
-  var keys = ['escSmall','escMid','art','tele','selfProp'];
-  var sinoArr  = SIM_YEARS.map(function(y) { return data[y].sinoUnits; });
-  var shareArr = SIM_YEARS.map(function(y) { return parseFloat((data[y].share * 100).toFixed(2)); });
-  var revArr   = SIM_YEARS.map(function(y) { return parseFloat((data[y].revenue / 1e6).toFixed(2)); });
-  var bgRevArr = SIM_YEARS.map(function(y) {
-    return data[y].kind === 'actual'   ? 'rgba(41,171,226,0.85)'
-         : data[y].kind === 'estimate' ? 'rgba(150,150,150,0.5)'
-         :                               'rgba(244,121,32,0.8)';
-  });
-
-  if (_cMain) {
-    keys.forEach(function(k, i) {
-      _cMain.data.datasets[i].data = SIM_YEARS.map(function(y) { return data[y].types[k] || 0; });
-    });
-    _cMain.data.datasets[keys.length].data = sinoArr;
-    _cMain.update('none');
-
-    _cShare.data.datasets[0].data = shareArr;
-    _cShare.data.datasets[0].pointBackgroundColor = SIM_YEARS.map(function(y) {
-      return data[y].kind === 'actual' ? '#29ABE2' : 'var(--sb-orange)';
-    });
-    _cShare.update('none');
-
-    _cRev.data.datasets[0].data = revArr;
-    _cRev.data.datasets[0].backgroundColor = bgRevArr;
-    _cRev.update('none');
-  }
-}
-
-function initSimCharts() {
-  var inp = _readInputs();
-  var data = _buildRows(inp);
-  var labels = SIM_YEARS.map(String);
-  var keys = ['escSmall','escMid','art','tele','selfProp'];
-
-  // ── Main: stacked bar (by type) + Sinoboom line overlay ──
-  var stackDs = keys.map(function(k) {
-    return {
-      label: SIM_DATA.labels[k],
-      data: SIM_YEARS.map(function(y) { return data[y].types[k] || 0; }),
-      backgroundColor: SIM_DATA.colors[k],
-      stack: 'mkt',
-      order: 2
-    };
-  });
-  stackDs.push({
-    label: 'יחידות סינובום',
-    data: SIM_YEARS.map(function(y) { return data[y].sinoUnits; }),
-    type: 'line',
-    borderColor: '#cc0000',
-    backgroundColor: 'rgba(204,0,0,0.08)',
-    borderWidth: 2.5,
-    pointRadius: 6,
-    pointBackgroundColor: '#cc0000',
-    fill: false,
-    order: 1,
-    yAxisID: 'ySino'
-  });
-
-  _cMain = new Chart(document.getElementById('chartSimMain'), {
+  // ── 1. Deliveries by type (grouped bar: 2024 / 2025 / 2026 partial) ──
+  new Chart(document.getElementById('chartGaryTypes'), {
     type: 'bar',
-    data: { labels: labels, datasets: stackDs },
+    data: {
+      labels: GARY.types.map(function(t) { return t.heb; }),
+      datasets: [
+        { label: '2024',
+          data: GARY.types.map(function(t) { return t.y24; }),
+          backgroundColor: 'rgba(41,171,226,0.65)', borderRadius: 4 },
+        { label: '2025',
+          data: GARY.types.map(function(t) { return t.y25; }),
+          backgroundColor: 'rgba(244,121,32,0.85)', borderRadius: 4 },
+        { label: '2026 (חלקי)',
+          data: GARY.types.map(function(t) { return t.y26p; }),
+          backgroundColor: 'rgba(46,204,113,0.7)', borderRadius: 4 }
+      ]
+    },
     options: {
       responsive: true,
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 11 } } },
-        title: {
-          display: true,
-          text: 'שוק במות ההרמה לפי סוגים + מיצוב סינובום (2022–2028)',
-          font: { size: 12, weight: 'bold' }
-        },
-        tooltip: {
-          callbacks: {
-            footer: function(items) {
-              var yr = parseInt(items[0].label);
-              return 'סינובום: ' + data[yr].sinoUnits + ' יח’ (' +
-                     (data[yr].share * 100).toFixed(1) + '%)';
-            }
-          }
-        }
-      },
-      scales: {
-        x: { stacked: true },
-        y: { stacked: true, title: { display: true, text: 'יחידות שוק' } },
-        ySino: {
-          type: 'linear', position: 'right',
-          grid: { drawOnChartArea: false },
-          title: { display: true, text: 'סינובום (יח’)' },
-          ticks: { color: '#cc0000' }
-        }
-      }
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { title: { display: true, text: 'יחידות' } } }
     }
   });
 
-  // ── Share: line chart ──
-  _cShare = new Chart(document.getElementById('chartSimShare'), {
-    type: 'line',
+  // ── 2. Segment doughnut 2025 ──
+  new Chart(document.getElementById('chartGaryDoughnut'), {
+    type: 'doughnut',
     data: {
-      labels: labels,
+      labels: GARY.types.map(function(t) { return t.heb; }),
       datasets: [{
-        label: 'נתח שוק סינובום (%)',
-        data: SIM_YEARS.map(function(y) { return parseFloat((data[y].share * 100).toFixed(2)); }),
-        borderColor: 'var(--sb-orange)',
-        backgroundColor: 'rgba(244,121,32,0.1)',
-        borderWidth: 2.5,
-        pointRadius: 5,
-        pointBackgroundColor: SIM_YEARS.map(function(y) {
-          return data[y].kind === 'actual' ? '#29ABE2' : 'var(--sb-orange)';
-        }),
-        fill: true,
-        tension: 0.35
+        data: GARY.types.map(function(t) { return t.y25; }),
+        backgroundColor: GARY.types.map(function(t) { return t.color; }),
+        borderWidth: 2
       }]
     },
     options: {
       responsive: true,
       plugins: {
         legend: { display: false },
-        title: { display: true, text: 'נתח שוק סינובום לאורך השנים (%)' }
-      },
-      scales: {
-        y: { min: 0, title: { display: true, text: '%' } }
+        title: { display: true, text: 'פילוח שוק 2025' }
       }
     }
   });
 
-  // ── Revenue: bar chart ──
-  _cRev = new Chart(document.getElementById('chartSimRevenue'), {
+  // Doughnut legend
+  var legendEl = document.getElementById('doughnutLegend');
+  if (legendEl) {
+    var total25 = GARY.types.reduce(function(s, t) { return s + t.y25; }, 0);
+    legendEl.innerHTML = GARY.types.map(function(t) {
+      return '<div class="d-flex justify-content-between align-items-center mb-1">' +
+        '<span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;' +
+        'background:' + t.color + ';margin-left:4px;"></span>' + t.heb + '</span>' +
+        '<span class="fw-bold">' + t.y25 + ' (' + (t.y25 / total25 * 100).toFixed(1) + '%)</span>' +
+        '</div>';
+    }).join('');
+  }
+
+  // ── 3. Market type table ──
+  var typeBody = document.getElementById('marketTypeTable');
+  if (typeBody) {
+    var tot24 = GARY.types.reduce(function(s, t) { return s + t.y24; }, 0);
+    var tot25 = GARY.types.reduce(function(s, t) { return s + t.y25; }, 0);
+    typeBody.innerHTML = GARY.types.map(function(t) {
+      var growth = t.y24 > 0 ? ((t.y25 - t.y24) / t.y24 * 100).toFixed(0) : null;
+      var share25 = (t.y25 / tot25 * 100).toFixed(1);
+      var mktVal = (t.y25 * t.avg / 1e6).toFixed(2);
+      var sinoHtml = t.sino.length > 0
+        ? t.sino.map(function(m) {
+            return '<span class="badge me-1" style="background:var(--sb-light);color:var(--sb-blue);font-size:.7rem;">' + m + '</span>';
+          }).join('')
+        : '<span class="text-muted" style="font-size:.78rem;">—</span>';
+      var gColor = growth !== null ? (parseInt(growth) > 0 ? '#2ecc71' : '#e74c3c') : '#888';
+      var gText = growth !== null ? (parseInt(growth) > 0 ? '+' : '') + growth + '%' : '—';
+      return '<tr>' +
+        '<td class="fw-bold">' + t.heb + '</td>' +
+        '<td class="text-center">' + t.y24 + '</td>' +
+        '<td class="text-center fw-bold">' + t.y25 + '</td>' +
+        '<td class="text-center fw-bold" style="color:' + gColor + ';">' + gText + '</td>' +
+        '<td class="text-center">' + share25 + '%</td>' +
+        '<td class="text-center">' + fmtUSD(t.avg) + '</td>' +
+        '<td class="text-center">$' + mktVal + 'M</td>' +
+        '<td>' + sinoHtml + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  // ── 4. Manufacturer ranking — horizontal bar chart ──
+  var mfrTotal = GARY.mfrRanks.reduce(function(s, r) { return s + r.units; }, 0);
+  new Chart(document.getElementById('chartMfrShare'), {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: GARY.mfrRanks.map(function(r) { return r.mfr; }),
       datasets: [{
-        label: 'הכנסות סינובום ($M)',
-        data: SIM_YEARS.map(function(y) { return parseFloat((data[y].revenue / 1e6).toFixed(2)); }),
-        backgroundColor: SIM_YEARS.map(function(y) {
-          return data[y].kind === 'actual'   ? 'rgba(41,171,226,0.85)'
-               : data[y].kind === 'estimate' ? 'rgba(150,150,150,0.5)'
-               :                               'rgba(244,121,32,0.8)';
+        data: GARY.mfrRanks.map(function(r) { return r.units; }),
+        backgroundColor: GARY.mfrRanks.map(function(r) {
+          return r.mfr === 'SINOBOOM' ? '#F47920' : '#29ABE2';
         }),
         borderRadius: 4
       }]
     },
     options: {
+      indexAxis: 'y',
       responsive: true,
       plugins: {
         legend: { display: false },
-        title: { display: true, text: 'הכנסות שנתיות — סינובום ($M)' },
-        tooltip: { callbacks: { label: function(ctx) { return '$' + ctx.raw.toFixed(2) + 'M'; } } }
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.raw.toLocaleString() + ' יח’ (' +
+                (ctx.raw / mfrTotal * 100).toFixed(1) + '%)';
+            }
+          }
+        }
       },
-      scales: { y: { title: { display: true, text: '$M' } } }
+      scales: {
+        x: { title: { display: true, text: 'יחידות (מצטבר)' } }
+      }
     }
   });
 
-  runSimulation();
+  // Manufacturer ranking table
+  var mfrBody = document.getElementById('mfrRankBody');
+  if (mfrBody) {
+    mfrBody.innerHTML = GARY.mfrRanks.map(function(r, i) {
+      var isSino = r.mfr === 'SINOBOOM';
+      var share = (r.units / mfrTotal * 100).toFixed(1);
+      var rowStyle = isSino ? 'background:#fff8f0;font-weight:700;' : '';
+      var nameHtml = isSino
+        ? '<strong style="color:var(--sb-orange);">' + r.mfr + ' ◄</strong>'
+        : r.mfr;
+      var medal = i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : i === 2 ? '🥉 ' : '';
+      return '<tr style="' + rowStyle + '">' +
+        '<td class="text-center">' + medal + (i + 1) + '</td>' +
+        '<td>' + nameHtml + '</td>' +
+        '<td class="text-center">' + r.units.toLocaleString() + '</td>' +
+        '<td class="text-center">' + share + '%</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  // ── 5. Simulator type breakdown chart ──
+  updateSimulator(5);
 }
-// ========== END MARKET SIMULATOR ==========
+
+document.addEventListener("DOMContentLoaded", initMarketCharts);
+
 
 </script>
 </body>
