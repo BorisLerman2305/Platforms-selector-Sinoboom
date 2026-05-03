@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SINOBOOM – מערכת בחירת במות הרמה</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --sb-blue:  #003087;
+      --sb-blue2: #0055b3;
+      --sb-orange:#F47920;
+      --sb-light: #eef3fc;
+    }
+    body { background:#f0f4f8; font-family:'Segoe UI',Arial,sans-serif; color:#1a1a2e; }
+
+    /* ── Header ── */
+    .hdr { background:linear-gradient(135deg,var(--sb-blue) 0%,var(--sb-blue2) 100%);
+           color:#fff; padding:1rem 0 0; box-shadow:0 3px 12px rgba(0,0,0,.25); }
+    .brand { font-size:1.9rem; font-weight:900; letter-spacing:-.5px; }
+    .brand span { color:var(--sb-orange); }
+    .sub-brand { font-size:.82rem; opacity:.75; }
+
+    /* ── Nav tabs ── */
+    .nav-tabs { border:none; }
+    .nav-tabs .nav-link { color:rgba(255,255,255,.65); border:none;
+      border-bottom:3px solid transparent; padding:.75rem 1.4rem; font-weight:600; transition:.2s; }
+    .nav-tabs .nav-link:hover  { color:#fff; background:rgba(255,255,255,.08); }
+    .nav-tabs .nav-link.active { color:#fff; border-bottom-color:var(--sb-orange);
+      background:rgba(255,255,255,.12); }
+
+    /* ── Cards ── */
+    .card-box { background:#fff; border-radius:14px; padding:1.4rem;
+                box-shadow:0 4px 18px rgba(0,48,135,.09); }
+
+    /* ── Form elements ── */
+    input[type=range] { accent-color:var(--sb-orange); }
+    .form-select:focus, .form-control:focus { border-color:var(--sb-blue2);
+      box-shadow:0 0 0 .2rem rgba(0,85,179,.18); }
+    .btn-primary-sb { background:var(--sb-blue); border:none; color:#fff; font-weight:700;
+      border-radius:8px; padding:.6rem 1.2rem; transition:.2s; }
+    .btn-primary-sb:hover { background:var(--sb-blue2); color:#fff; }
+    .btn-check:checked + .btn-outline-primary { background:var(--sb-blue); border-color:var(--sb-blue); }
+
+    /* ── Model card ── */
+    .model-card { background:#fff; border-radius:14px; padding:1.3rem;
+      box-shadow:0 4px 18px rgba(0,48,135,.09);
+      border-inline-end:5px solid var(--sb-blue); margin-bottom:.85rem; transition:.2s; }
+    .model-card.best { border-inline-end-color:var(--sb-orange); }
+    .model-card:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,48,135,.16); }
+
+    /* ── Spec grid ── */
+    .spec-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:.6rem; margin-top:.9rem; }
+    .spec-item { background:var(--sb-light); border-radius:9px; padding:.55rem .6rem; text-align:center; }
+    .spec-val  { font-size:1.15rem; font-weight:800; color:var(--sb-blue); line-height:1.1; }
+    .spec-lbl  { font-size:.68rem; color:#666; margin-top:2px; line-height:1.2; }
+
+    /* ── Height badge ── */
+    .wh-badge { background:var(--sb-blue); color:#fff; border-radius:50%;
+      width:68px; height:68px; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; flex-shrink:0; }
+    .wh-num  { font-size:1.4rem; font-weight:900; line-height:1; }
+    .wh-unit { font-size:.62rem; opacity:.85; }
+
+    .best-label { background:var(--sb-orange); color:#fff; font-size:.68rem;
+      font-weight:700; padding:.2rem .6rem; border-radius:20px; white-space:nowrap; }
+    .cat-badge  { font-size:.72rem; font-weight:600; padding:.25rem .65rem; border-radius:20px; }
+
+    /* ── Competitor chips ── */
+    .comp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:.5rem; margin-top:.7rem; }
+    .comp-chip { border:1px solid #d0d9f0; border-radius:9px; padding:.5rem .7rem;
+                 background:#fff; font-size:.82rem; }
+    .comp-mfr  { font-size:.68rem; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:.4px; }
+    .comp-mdl  { font-weight:800; color:#1a1a2e; }
+    .comp-wh   { font-size:.7rem; color:#888; }
+
+    /* ── Catalog table ── */
+    #catalogTable thead th { background:var(--sb-blue); color:#fff; font-size:.78rem;
+      font-weight:700; white-space:nowrap; }
+    #catalogTable td { font-size:.82rem; vertical-align:middle; }
+    .tbl-model { font-weight:800; color:var(--sb-blue); }
+
+    /* ── Cross-ref ── */
+    .xref-model-title { font-size:1.4rem; font-weight:900; color:var(--sb-blue); }
+    .xref-section-title { font-size:.78rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.5px; color:#888; margin-bottom:.5rem; }
+
+    /* ── No results ── */
+    .no-res { text-align:center; padding:3rem 1rem; color:#aaa; }
+    .no-res i { font-size:3rem; display:block; margin-bottom:.75rem; }
+
+    /* ── Responsive ── */
+    @media(max-width:575px) {
+      .wh-badge { width:54px; height:54px; }
+      .wh-num   { font-size:1.15rem; }
+      .spec-val { font-size:1rem; }
+      .brand    { font-size:1.45rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<div class="hdr">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div>
+        <div class="sub-brand" style="color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;">מערכת בחירת במות הרמה</div>
+        <div style="font-size:.72rem;opacity:.7;margin-top:2px;">LK Tools &amp; Equipment Ltd. | נתונים: sinoboom.com | עודכן: אפריל 2026</div>
+      </div>
+      <div>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAP0AAAAhCAYAAAASya2oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA4NpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxNDQ3Nzc0YS0xZThlLTQ4MGQtYmE5Mi1hNTJlOTM0YjMzNzEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6ODIyMTNBRDdEREZCMTFFQUJFQ0NEQTgxMTAxQ0NCOTEiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ODIyMTNBRDZEREZCMTFFQUJFQ0NEQTgxMTAxQ0NCOTEiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozOWZiZjZkNC0wZWExLTQ3MDEtYTMyNS1hNTJmZDExOGYzYWYiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpkMDNkZjFmMy1kNzMyLWY2NGYtYjMyZi1kMzJlYjM5MGNiZTIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4QabLJAAAIuklEQVR42uxdC7BNVRhe53BJSF4Rca9SYlD0UEkJlZDo9lKpMGN66GFkUimj15RKakgJSdFIHqVSUmKUTMY7KcJIeZZ7CQlX/zfnP9OZY69/77vf+9jfzDdz71n7rL32v/5/7bX+9a//JKqM/0WZIJ9YQMxT7qKIuCTrs0uJJ2iun2uxXrS1LrGCzXYdIq4n/u7w+fAcpxNrEcs4kNFa4t8Wrm3Iz+4FcP9fiTsd1pMgNiDWEfrZDLuJm11oS0WWF/onaeP7R4jbiRuJByxc35RYW3mPnSyf3boLymo+P43Yj1jIyuQFFhLbZH02iVhfUBgdahAfJt7Cg5QbWEmcQHzDYqem0Yo4kNiRFcsp/iF+TRxO/Eq4rg9xkMcKtYL4JvEt4uFSfO9U4qOsT3VcaMdR4lLiOOJYHqitoi1xALGDg4EnE/uJXxCHEb8XrsPz36r8AQak74ijiVOIJZmFRiPcfcSfiI94aPBu4jbiOm5vvov1NmdDgyxaW7geM4u3iYtYuSu61A4oZiee6cwkVg1Q1ucQXycuI55p8Tv38szpfpcMPv0COI/bsop4roXvnEScRpxH7OKSwQMnErtzv0/k/4NGGX6hTuZ2FUhG/xpxJLGSigbuIb5LPNnDe+SzwbUTrilH/IR4l8mMxCmuY6WtErDcm/Jb7SyT654mjvLYEBoRF/AMSwfIaz7xeo/l0pM4JySGn8aFbPgNjYx+EI/GUUEbHqQSPtwLb4UPifU05a+YDApuv20nhkD+1YgfCW/MbsTBPrWlMnEGL/OMMM7ibMANtGa9DBNqs3zKZRr92cSnImTwSV5blvXxnphWv6Axwrt9fv6uxM4h6AfoTX/NzGe4z22B32CoZg1f6HNbehNbhMxmMDvrm2n0GJHzImT0cJI1DuC+NxusSx9S9ry/TtE/REus7NkWjKxBAG3pxWv3TAwIoB2JgO5rBvi9knhTlue1og7w/C0mbnG5AWsdfPdak/INKuVsKrExg8C2YS2hHE61sRkOk65CffAyY5dim80pawdhNtOWr9lroS7032YH8r5YpXZ0jFCP3yKrMj7rYlLfapVykJYWZfi5q2nKK7DMpvP/WFu3F+o7wv6aPTZnfu2F5eU13N4jFuqCjmw1+DyPl0lGwK7Bp1mflec26ZzI6MMWUKiLlN5xd5AbPy9kI1YzoWyqSnn0D9msuyorQktNefOMv+sLCgiDv4l9AXZxGbclT2MAiANYYaEerDEnO1zarBQMv0mW0bcU6hrDs4MSm23BgAynXCNBN9JG31jp4zUO8wAx34FcsMSapTF86EWBSsU3mOF5AwMG4IAs0nxnF+tXNuCw+5Z4ik4+SZNp2HshNHhlMIXLxGAHBg8gqOFFobx6xt/SLscPDg0egFf6cxMHjR+ATCYJ5ZUMFF6HxxwYPICAmFct9k914bo5Dg1esaEuEsprBGAb2B6dIMknqeTtnw0qetjuQh1uLGV2uvQ80vTdT0fmVqFsl8E0U4c/XWhLsUWZSH6qIhcHRB2C8pOJbUqarDfbqRgxzJdUS2PxRAcwein4Hk6BEcL6IMbxAeyW9NSUwUn4Wyyi6ABTIXi54dnVxbw/yCy2sRbbw28BRKt9oKwdHInhPuA8G+lARyoL5cNi8UbP6BUv/J80udZO6Ce8vghjRWwyPJRDVOoAy9FY9L6ionLvLEAm4KicHos3etN74GXiHx7fq6ZKHZDA1lGFWPSRB3YW7ozFEF2jxzS8B/FfH+6J46+IhU7E4o8ssMf9jEoFiMSIqNGnR+5Cn9bdGGD6xuKP9LJwtkoFQcWIsNEDcLhdoOSAELcw1KN1Zgx/gIjA8cparoEYIRuxs4GYeITeIt76du7Uejam4zDockI5wilvIL4Td4Pn2Odw6VZZoyvoX2TRaa5Kl0knRsiMPo1FSg4xNAMGiStU6ux3Xc01nWKj9wVYSjmJvYfj9SWVyoKTDcS349BR7MWP6PTeTWBbDrndJA9vi7gLIgHkCMRR3h2a8sJYRLHRZwKGrwvqqRl3QWSA5cHyePCOjd4K8oX75HKEnlsDmhQN5/c6Wne0Nvs02UGhDjcSe1YxGZyM/s6GW3kVpXoOHo9Gj7XgKKF8XcQNWzpJh12Q7g7rR0KPq4XyHT4+KxJjNNGUZZ8ElAK9nnOodzgH8oBQvs1iO65UqXwFTgCf1CVC+dYwKm3akedFjjx0LHYApLTHc3LA6P9SxufH4chEyuUFNo2zEiumztmKjCzrLdYFI+nm4DmRgeYqoXxN1v/IiqNLRIl8gtgRspM5CduElyv5nHzmi2STSv1ugFHyThx7xe8IzFXWsg8ZveGlzDm7lb2MSb4ZPaZnN/p8b0xNp0Tc6GF4iG24Q1OeYCX1AvNLoaytlJwi2ik+y/of2WR6CNc3U/JRXbuAw/HLjP/3sVF3EfS/o4cyCeU2ZjLAeyMUd2MOrN2R/rokoPuGAUhG8X7WZ9MC6tsJ6th8d0HICTtXI8KqsEEZPaalg1RuAB7tMT7fcxbPMMKAx9WxWWjgQBvoczswlR5i8Dl2j2YEMPgsiY3+f2zh6VaRyh0g34BfuQQxyPQMyXNDuUdryvC2f9anduxhn4XOsYrU2Mt8aguSUvYLs7L6bfRwnMCr/bPKLeDNhtDl8R7fB4YEj3NxwM+bPmXXW8m5EQazARzwsC3QJTiMFwvXFLPcpvowCCLD7v7j3ejhPUXW0M4skG0qN4E92T6sgDNd7HjUiwNQ8J7jrMLeAJ8RcRUI58WPRz6hrCVDwZYtfuxypMt9j4xM+LFVxP2vsdh2pIyGx30266UbQD9/rFI7Er1crNczJPj36bH9cL4H9Rdxh1g1AKu/Ty/l6v9GOfeaSvKA4q62UAdiFM5QqX1lu4MrDPxHFfzv08NRuYv70olskywTpO4u72Aqv0k5j1GA/jTg/knYlAnasMGifku/T79cHZtRGMDuQlvhZbpQU1ag9L84vf4/AQYAWfiSXH1Hx/kAAAAASUVORK5CYII=" alt="SINOBOOM" style="height:50px;filter:brightness(0) invert(1);" />
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mt-3" id="mainTabs">
+      <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tabSelect">
+        <i class="bi bi-search me-1"></i>בחירת דגם</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabXref">
+        <i class="bi bi-arrow-left-right me-1"></i>Cross&nbsp;Reference</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabCatalog">
+        <i class="bi bi-table me-1"></i>כל&nbsp;הדגמים</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabMarket">
+        <i class="bi bi-bar-chart-line me-1"></i>ניתוח&nbsp;שוק</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<div class="container py-4">
+<div class="tab-content">
+
+<!-- ━━━━━━━━━━━━━━━━━━ TAB 1 – בחירת דגם ━━━━━━━━━━━━━━━━━━ -->
+<div class="tab-pane fade show active" id="tabSelect">
+  <div class="row g-3">
+
+    <!-- Form panel -->
+    <div class="col-lg-4">
+      <div class="card-box">
+        <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+          <i class="bi bi-sliders me-1"></i> פרמטרי בחירה
+        </h6>
+
+        <!-- Working height -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold d-flex justify-content-between">
+            <span>גובה עבודה נדרש</span>
+            <span id="heightDisplay" class="badge rounded-pill" style="background:var(--sb-orange);">6 מ׳</span>
+          </label>
+          <input type="range" class="form-range" id="heightSlider"
+                 min="4" max="30" step="0.5" value="6"
+                 oninput="onHeightChange(this.value)">
+          <div class="d-flex justify-content-between text-muted" style="font-size:.7rem;">
+            <span>4 מ׳</span><span>12 מ׳</span><span>20 מ׳</span><span>30 מ׳</span>
+          </div>
+          <small class="text-muted">גובה מהרצפה כולל אדם עומד (working height)</small>
+        </div>
+
+        <!-- Environment -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">סביבת עבודה</label>
+          <div class="btn-group w-100">
+            <input type="radio" class="btn-check" name="env" id="envIn"   value="indoor"  checked onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="envIn">פנים</label>
+            <input type="radio" class="btn-check" name="env" id="envBoth" value="both"         onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="envBoth">שניהם</label>
+            <input type="radio" class="btn-check" name="env" id="envOut"  value="outdoor"     onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="envOut">חוץ</label>
+          </div>
+        </div>
+
+        <!-- Terrain -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">סוג שטח</label>
+          <div class="btn-group w-100">
+            <input type="radio" class="btn-check" name="terrain" id="terrFlat"  value="flat"  checked onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="terrFlat">מישור</label>
+            <input type="radio" class="btn-check" name="terrain" id="terrRough" value="rough"         onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="terrRough">שטח מחוספס</label>
+          </div>
+        </div>
+
+        <!-- Reach -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold d-flex justify-content-between">
+            <span>טווח אופקי נדרש (אופציונלי)</span>
+            <span id="reachDisplay" class="badge bg-secondary">0 מ׳</span>
+          </label>
+          <input type="range" class="form-range" id="reachSlider"
+                 min="0" max="22" step="0.5" value="0"
+                 oninput="onReachChange(this.value)">
+        </div>
+
+        <!-- Workers -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">עובדים בפלטפורמה</label>
+          <select class="form-select" id="workers" onchange="updateResults()">
+            <option value="100">1 עובד (עד 100 ק"ג)</option>
+            <option value="200" selected>2 עובדים (עד 200 ק"ג)</option>
+            <option value="350">2 עובדים + ציוד (עד 350 ק"ג)</option>
+            <option value="500">עומס כבד (מעל 350 ק"ג)</option>
+          </select>
+        </div>
+
+        <!-- Min platform width -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">רוחב פלטפורמה מינימלי</label>
+          <select class="form-select" id="minWidth" onchange="updateResults()">
+            <option value="0">ללא דרישה</option>
+            <option value="0.76">0.76 מ׳</option>
+            <option value="0.85">0.85 מ׳</option>
+            <option value="1.15">1.15 מ׳</option>
+            <option value="1.60">1.60 מ׳</option>
+            <option value="1.83">1.83 מ׳ ומעלה</option>
+          </select>
+        </div>
+
+        <!-- Power -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">העדפת כוח הנעה</label>
+          <div class="btn-group w-100" role="group">
+            <input type="radio" class="btn-check" name="powerPref" id="ppAny" value="any" checked onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="ppAny">הכל</label>
+            <input type="radio" class="btn-check" name="powerPref" id="ppElec" value="electric" onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="ppElec">⚡ חשמלי</label>
+            <input type="radio" class="btn-check" name="powerPref" id="ppDiesel" value="diesel" onchange="updateResults()">
+            <label class="btn btn-outline-primary" for="ppDiesel">&#128295; דיזל</label>
+          </div>
+        </div>
+
+      </div><!-- /card-box -->
+    </div><!-- /col-lg-4 -->
+
+    <!-- Results panel -->
+    <div class="col-lg-8">
+      <div id="resultsContainer">
+        <div class="no-res">
+          <i class="bi bi-arrow-right-square"></i>
+          <p>שנה פרמטר כלשהו כדי לראות דגמים מתאימים</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row -->
+</div><!-- /tabSelect -->
+
+<!-- ━━━━━━━━━━━━━━━━━━ TAB 2 – Cross Reference ━━━━━━━━━━━━━━━━━━ -->
+<div class="tab-pane fade" id="tabXref">
+  <div class="row g-3 align-items-stretch">
+
+    <!-- Selection panel -->
+    <div class="col-md-4">
+      <div class="card-box h-100">
+        <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+          <i class="bi bi-arrow-left-right me-1"></i> בחירת דגם מתחרה
+        </h6>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted mb-1">יצרן</label>
+          <select class="form-select" id="xrefMfr" onchange="onMfrChange()">
+            <option value="">— בחר יצרן —</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted mb-1">דגם</label>
+          <select class="form-select" id="xrefModel" onchange="showXref()" disabled>
+            <option value="">— בחר דגם —</option>
+          </select>
+        </div>
+        <div class="mt-3">
+          <label class="form-label small fw-semibold text-muted mb-1">סוג כוח</label>
+          <select class="form-select" id="xrefPower" onchange="showXref()">
+            <option value="all">חשמל + דיזל</option>
+            <option value="electric">חשמלי בלבד</option>
+            <option value="diesel">דיזל בלבד</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results panel -->
+    <div class="col-md-8">
+      <div id="xrefSinoboom">
+        <div class="no-res">
+          <i class="bi bi-arrow-left-right"></i>
+          <p>בחר יצרן ודגם מתחרה כדי לראות את הדגם המקביל של SINOBOOM</p>
+        </div>
+      </div>
+      <div id="xrefOthers" class="mt-3"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━ TAB 3 – Catalog ━━━━━━━━━━━━━━━━━━ -->
+<div class="tab-pane fade" id="tabCatalog">
+  <div class="card-box mb-3">
+    <div class="row g-2 align-items-center">
+      <div class="col-sm-5">
+        <select class="form-select" id="catFilter" onchange="renderCatalog()">
+          <option value="all">כל הקטגוריות</option>
+          <option value="scissor_e">מספריים חשמלית</option>
+          <option value="scissor_rt">מספריים שטח</option>
+          <option value="boom_a">במת בום זזת</option>
+          <option value="boom_t">במת זרוע טלסקופית</option>
+        </select>
+      </div>
+      <div class="col-sm-4">
+        <select class="form-select" id="catSort" onchange="renderCatalog()">
+          <option value="wh">מיון: גובה עבודה</option>
+          <option value="cap">מיון: קיבולת</option>
+          <option value="reach">מיון: טווח אופקי</option>
+        </select>
+      </div>
+      <div class="col-sm-3 text-muted" style="font-size:.78rem;">
+        <i class="bi bi-info-circle me-1"></i>מקור: sinoboom.com
+      </div>
+    </div>
+  </div>
+  <div class="card-box p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0" id="catalogTable">
+        <thead>
+          <tr>
+            <th>דגם</th>
+            <th>קטגוריה</th>
+            <th>גובה עבודה</th>
+            <th>גובה פלטפורמה</th>
+            <th>פלטפורמה (מ׳)</th>
+            <th>טווח אופקי</th>
+            <th>קיבולת</th>
+            <th>כוח</th>
+            <th>שיפוע מקס׳</th>
+            <th>משקל (ק"ג)</th>
+          </tr>
+        </thead>
+        <tbody id="catalogBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━ TAB 4 – סימולטור שוק ━━━━━━━━━━━━━━━━━━ -->
+<div class="tab-pane fade" id="tabMarket">
+
+  <!-- Alert: why Gary's data -->
+  <div class="alert d-flex gap-2 mb-3 align-items-start"
+       style="background:#fff8e6;border:1.5px solid #F47920;border-radius:10px;font-size:.87rem;">
+    <i class="bi bi-info-circle-fill mt-1" style="color:#F47920;font-size:1.1rem;flex-shrink:0;"></i>
+    <div>
+      <strong>מדוע נתוני גארי ולא נתוני משרד התחבורה (משה"ת)?</strong><br>
+      כ-50% מהמספריים החשמלית (הקטגוריה הגדולה ביותר) אינן חייבות ברישוי כלי רכב — הן עוברות תקן מכון
+      התקנים כציוד תעשייתי ואינן מדווחות למשה"ת. גארי, כנציג יבואנים, רואה את <strong>כלל המסירות
+      האמיתיות</strong> בשוק. הנתונים שלו גבוהים בכ-65% מהנתונים הרשמיים.
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="row g-3 mb-3" id="kpiRow">
+    <div class="col-6 col-lg-3">
+      <div class="card-box text-center h-100" style="border-top:4px solid var(--sb-blue);">
+        <div style="font-size:2rem;font-weight:900;color:var(--sb-blue);">1,270</div>
+        <div class="text-muted" style="font-size:.82rem;">יחידות נמסרו 2025</div>
+        <div class="mt-1"><span class="badge" style="background:var(--sb-light);color:var(--sb-blue2);font-size:.7rem;">מקור: גארי</span></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card-box text-center h-100" style="border-top:4px solid #2ecc71;">
+        <div style="font-size:2rem;font-weight:900;color:#2ecc71;">+48.4%</div>
+        <div class="text-muted" style="font-size:.82rem;">צמיחה 2024→2025</div>
+        <div class="mt-1"><small class="text-muted">856 → 1,270 יח׳</small></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card-box text-center h-100" style="border-top:4px solid var(--sb-blue2);">
+        <div style="font-size:2rem;font-weight:900;color:var(--sb-blue2);">$29.9M</div>
+        <div class="text-muted" style="font-size:.82rem;">שווי שוק 2025</div>
+        <div class="mt-1"><small class="text-muted">לפי מחירי ממוצע לסוג</small></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card-box text-center h-100" style="border-top:4px solid var(--sb-orange);">
+        <div style="font-size:2rem;font-weight:900;color:var(--sb-orange);">1.3%</div>
+        <div class="text-muted" style="font-size:.82rem;">נתח שוק סינובום</div>
+        <div class="mt-1"><small class="text-muted">53 יח׳ | פוטנציאל גבוה</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row g-3 mb-3">
+    <!-- Grouped bar by type per year -->
+    <div class="col-lg-7">
+      <div class="card-box h-100">
+        <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+          <i class="bi bi-bar-chart-fill me-1"></i>מסירות לפי סוג ושנה — נתוני גארי
+        </h6>
+        <canvas id="chartGaryTypes" style="max-height:280px;"></canvas>
+      </div>
+    </div>
+    <!-- Doughnut 2025 -->
+    <div class="col-lg-5">
+      <div class="card-box h-100">
+        <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+          <i class="bi bi-pie-chart-fill me-1"></i>פילוח לפי סוג — 2025
+        </h6>
+        <canvas id="chartGaryDoughnut" style="max-height:280px;"></canvas>
+        <div id="doughnutLegend" class="mt-2" style="font-size:.76rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market Table by Type -->
+  <div class="card-box mb-3">
+    <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+      <i class="bi bi-table me-1"></i>ניתוח שוק מפורט לפי סוג במה
+    </h6>
+    <div class="table-responsive">
+      <table class="table table-hover table-sm mb-0" style="font-size:.84rem;">
+        <thead style="background:var(--sb-blue);color:#fff;">
+          <tr>
+            <th>סוג</th>
+            <th class="text-center">2024</th>
+            <th class="text-center">2025</th>
+            <th class="text-center">צמיחה</th>
+            <th class="text-center">% שוק '25</th>
+            <th class="text-center">מחיר ממוצע</th>
+            <th class="text-center">שווי שוק '25</th>
+            <th>דגמי סינובום רלוונטיים</th>
+          </tr>
+        </thead>
+        <tbody id="marketTypeTable"></tbody>
+        <tfoot style="background:#f0f8ff;font-weight:700;">
+          <tr>
+            <td>סה"כ</td>
+            <td class="text-center">856</td>
+            <td class="text-center">1,270</td>
+            <td class="text-center" style="color:#2ecc71;">+48.4%</td>
+            <td class="text-center">100%</td>
+            <td class="text-center">—</td>
+            <td class="text-center">$29,933,500</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- Row: Line chart + Gary vs Official comparison -->
+  <div class="row g-3 mb-3">
+    <div class="col-lg-8">
+      <div class="card-box h-100">
+        <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+          <i class="bi bi-graph-up me-1"></i>מגמת שוק — גארי לעומת נתונים רשמיים
+        </h6>
+        <canvas id="chartGaryVsOfficial" style="max-height:240px;"></canvas>
+        <div class="mt-2" style="font-size:.73rem;color:#888;">
+          * נתוני 2026 חלקיים (ינואר–מאי). הקו המקווקו = היקף שנתי משוער בהיוון x2.4
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card-box h-100">
+        <h6 class="fw-bold mb-2" style="color:var(--sb-blue);">
+          <i class="bi bi-question-circle me-1"></i>מדוע הפער?
+        </h6>
+        <div style="font-size:.81rem;line-height:1.6;">
+          <div class="mb-2 p-2 rounded" style="background:#fff3cd;">
+            <strong>מספריים חשמלית קטנה</strong><br>
+            נרשמות כ"ציוד תעשייתי" ולא כרכב — אינן מדווחות למשה"ת.<br>
+            גארי: 907 יח׳ | משה"ת: 299 יח׳ (פער: ×3)
+          </div>
+          <div class="mb-2 p-2 rounded" style="background:#e8f7fd;">
+            <strong>מנוף עצמאי (VL/ML)</strong><br>
+            גארי: 29 יח׳ | משה"ת: 5 יח׳ (פער: ×6)
+          </div>
+          <div class="p-2 rounded" style="background:#f0f0f0;">
+            <strong>בום מפרקי + טלסקופי</strong><br>
+            נתונים דומים — חייבים ברישוי מלא.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ MARKET SHARE SIMULATOR ═══════ -->
+  <div class="card-box mb-3" style="border:2px solid var(--sb-orange);border-radius:14px;">
+    <h6 class="fw-bold mb-1" style="color:var(--sb-orange);font-size:1.05rem;">
+      <i class="bi bi-sliders me-1"></i>סימולטור נתח שוק — סינובום
+    </h6>
+    <p class="text-muted mb-3" style="font-size:.82rem;">
+      גרור את המחוון כדי לראות: כמה יחידות ורווח יגיע סינובום כשישיג את נתח השוק המצוין — לפי שוק 2025
+    </p>
+
+    <!-- Slider -->
+    <div class="row align-items-center g-2 mb-3">
+      <div class="col-auto">
+        <span class="badge" style="background:var(--sb-light);color:var(--sb-blue);font-size:.9rem;">נוכחי: 1.3%</span>
+      </div>
+      <div class="col">
+        <input type="range" class="form-range" id="simoSlider" min="1" max="20" step="0.5" value="5"
+               oninput="updateSimulator(this.value)" style="accent-color:var(--sb-orange);">
+        <div class="d-flex justify-content-between" style="font-size:.7rem;color:#aaa;">
+          <span>1%</span><span>5%</span><span>10%</span><span>15%</span><span>20%</span>
+        </div>
+      </div>
+      <div class="col-auto">
+        <span id="simoLabel" class="fw-black"
+              style="font-size:1.5rem;color:var(--sb-orange);min-width:64px;display:inline-block;">5%</span>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="row g-3" id="simoResults">
+      <div class="col-6 col-md-3">
+        <div class="text-center p-3 rounded" style="background:var(--sb-light);">
+          <div id="simoUnits" style="font-size:1.8rem;font-weight:900;color:var(--sb-blue);">64</div>
+          <div class="text-muted" style="font-size:.77rem;">יחידות לשנה</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-3 rounded" style="background:#fff8f0;">
+          <div id="simoRevenue" style="font-size:1.8rem;font-weight:900;color:var(--sb-orange);">$1.5M</div>
+          <div class="text-muted" style="font-size:.77rem;">הכנסות משוערות</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-3 rounded" style="background:#f0fff4;">
+          <div id="simoGrowth" style="font-size:1.8rem;font-weight:900;color:#27ae60;">+20%</div>
+          <div class="text-muted" style="font-size:.77rem;">צמיחה מנוכחי (53 יח׳)</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-3 rounded" style="background:#f5f0ff;">
+          <div id="simoRank" style="font-size:1.8rem;font-weight:900;color:#8e44ad;">8th</div>
+          <div class="text-muted" style="font-size:.77rem;">דירוג משוער בשוק</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Type breakdown simulator -->
+    <div class="mt-3">
+      <div class="fw-semibold mb-2" style="font-size:.85rem;color:var(--sb-blue);">
+        פילוח יחידות לפי סוג (בנתח השוק שנבחר):
+      </div>
+      <div id="simoTypeBreakdown" class="row g-2"></div>
+    </div>
+
+    <!-- Simulator chart -->
+    <div class="mt-3">
+      <canvas id="chartSimulator" style="max-height:200px;"></canvas>
+    </div>
+  </div>
+
+  <!-- Sinoboom in Israel -->
+  <div class="card-box">
+    <h6 class="fw-bold mb-3" style="color:var(--sb-blue);">
+      <i class="bi bi-pin-map me-1"></i>סינובום בישראל — דגמים רשומים (נתוני גארי / משה"ת)
+    </h6>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0" style="font-size:.84rem;">
+        <thead style="background:var(--sb-light);">
+          <tr>
+            <th>דגם</th>
+            <th class="text-center">יחידות</th>
+            <th>סוג</th>
+            <th>גובה עבודה משוער</th>
+            <th>הערות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#fff8f0;">
+            <td class="fw-bold" style="color:var(--sb-orange);">GTZZ15J</td>
+            <td class="text-center fw-bold">27</td>
+            <td>בום מפרקי (דיזל)</td>
+            <td>~15 מ׳</td>
+            <td>הדגם הנמכר ביותר של סינובום בישראל</td>
+          </tr>
+          <tr><td class="fw-bold">GTJZ1218D</td><td class="text-center">8</td><td>מספריים שטח (דיזל)</td><td>~12 מ׳</td><td>מקביל ל-1218RD</td></tr>
+          <tr><td class="fw-bold">TB22J PLUS</td><td class="text-center">5</td><td>בום ישר (טלסקופי)</td><td>~22 מ׳</td><td>מקביל ל-TB22J Plus</td></tr>
+          <tr><td class="fw-bold">GTZZ15J-3</td><td class="text-center">4</td><td>בום מפרקי (דיזל)</td><td>~15 מ׳</td><td>וריאנט של GTZZ15J</td></tr>
+          <tr><td class="fw-bold">GTZZ25J</td><td class="text-center">3</td><td>בום מפרקי (דיזל)</td><td>~25 מ׳</td><td>מקביל ל-AB22EJ Plus</td></tr>
+          <tr><td class="fw-bold" style="color:var(--sb-blue);">AB14EJ</td><td class="text-center">2</td><td>בום מפרקי (חשמלי)</td><td>16 מ׳</td>
+            <td><a href="#" onclick="switchToTab1('AB14EJ');return false;" class="text-decoration-none" style="color:var(--sb-blue);font-size:.78rem;"><i class="bi bi-box-arrow-up-right me-1"></i>הצג בטאב 1</a></td>
+          </tr>
+          <tr><td class="fw-bold">GTZZ14EJ</td><td class="text-center">1</td><td>בום מפרקי (חשמלי)</td><td>~14 מ׳</td><td></td></tr>
+          <tr><td class="fw-bold">GTZZ18J</td><td class="text-center">1</td><td>בום מפרקי (דיזל)</td><td>~18 מ׳</td><td>מקביל ל-AB18J</td></tr>
+          <tr><td class="fw-bold">GTZZ16EJ</td><td class="text-center">1</td><td>בום מפרקי (חשמלי)</td><td>~16 מ׳</td><td></td></tr>
+          <tr><td class="fw-bold">GTJZZ15J</td><td class="text-center">1</td><td>בום מפרקי</td><td>~15 מ׳</td><td></td></tr>
+          <tr style="background:var(--sb-light);font-weight:700;">
+            <td>סה"כ</td><td class="text-center">53</td><td colspan="3">1.3% נתח שוק</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-2" style="font-size:.72rem;color:#aaa;">
+      מקור: נתוני גארי + רישוי משרד התחבורה. הפוטנציאל הגדול ביותר: מספריים חשמלית (אפס נוכחות!) ובום מפרקי.
+    </div>
+  </div>
+
+</div><!-- /tabMarket -->
+
+<!-- /tabMarket -->
+
+</div><!-- /tab-content -->
+</div><!-- /container -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ══════════════════════════════════════════════
+//  DATA  –  All Sinoboom current models
+//  Source: sinoboom.com (verified April 2026)
+// ══════════════════════════════════════════════
+const MODELS = [
+  // ── Electric Scissor Lifts ──────────────────
+  {
+    id:"0608SE", name:"0608SE", altName:"1930SE",
+    cat:"scissor_e", catLabel:"מספריים חשמלית",
+    catIcon:"bi-arrows-collapse-vertical",
+    wh: 7.8, wh_outdoor: 7.8, ph: 5.8,
+    platL:1.64, platW:0.76, ext:0.9,
+    cap:230, weight:1575, grade:25,
+    drive:"Electric 2WD×2WS", powerType:"electric",
+    widthStowed:0.79, lengthStowed:1.80,
+    supportsIndoor:true, supportsOutdoor:true, roughTerrain:false,
+    note:"2 עובדים (פנים) / 1 עובד (חוץ)",
+    url:"https://www.sinoboom.com/content/details_103_16.html",
+    competitors:{
+      "JLG":     {model:"ES1930",        wh:7.8},
+      "Genie":   {model:"GS-1930 / GS-1932", wh:7.79},
+      "Haulotte":{model:"Compact 8",     wh:7.82},
+      "LGMG":    {model:"S0607EII",      wh:7.7},
+      "Skyjack": {model:"SJ3219",        wh:7.9},
+      "Dingli":  {model:"JCPT0607DCM",   wh:8.0}
+    }
+  },
+  {
+    id:"0808E", name:"0808E", altName:"2732E",
+    cat:"scissor_e", catLabel:"מספריים חשמלית",
+    catIcon:"bi-arrows-collapse-vertical",
+    wh:10.1, wh_outdoor:8.0, ph:8.1,
+    platL:2.30, platW:0.80, ext:0.9,
+    cap:250, weight:2265, grade:25,
+    drive:"Electric 2WD×2WS", powerType:"electric",
+    widthStowed:0.83, lengthStowed:2.46,
+    supportsIndoor:true, supportsOutdoor:true, roughTerrain:false,
+    note:"גובה חיצוני מוגבל ל-8.0 מ׳",
+    url:"https://www.sinoboom.com/content/details_103_48.html",
+    competitors:{
+      "JLG":     {model:"2632ES",        wh:9.92},
+      "Genie":   {model:"GS-2632",       wh:9.92},
+      "Haulotte":{model:"Compact 10",    wh:9.7},
+      "LGMG":    {model:"S0808EII",      wh:9.7},
+      "Skyjack": {model:"SJ3226",        wh:9.8},
+      "Dingli":  {model:"JCPT0807AC",    wh:10.0}
+    }
+  },
+  {
+    id:"1012E", name:"1012E", altName:"3346E",
+    cat:"scissor_e", catLabel:"מספריים חשמלית",
+    catIcon:"bi-arrows-collapse-vertical",
+    wh:12.0, wh_outdoor:12.0, ph:10.0,
+    platL:2.30, platW:1.15, ext:0.9,
+    cap:320, weight:2815, grade:25,
+    drive:"Electric 2WD", powerType:"electric",
+    widthStowed:1.17, lengthStowed:2.45,
+    supportsIndoor:true, supportsOutdoor:true, roughTerrain:false,
+    note:"",
+    url:"https://www.sinoboom.com/content/details_103_51.html",
+    competitors:{
+      "JLG":     {model:"3246ES",        wh:11.75},
+      "Genie":   {model:"GS-3246",       wh:11.75},
+      "Haulotte":{model:"Compact 10N",   wh:11.8},
+      "LGMG":    {model:"S1212",         wh:11.8},
+      "Skyjack": {model:"SJ4632",        wh:11.6},
+      "Dingli":  {model:"JCPT1008AC",    wh:12.0}
+    }
+  },
+  {
+    id:"1212E", name:"1212E", altName:"4046E",
+    cat:"scissor_e", catLabel:"מספריים חשמלית",
+    catIcon:"bi-arrows-collapse-vertical",
+    wh:13.9, wh_outdoor:10.0, ph:11.9,
+    platL:2.30, platW:1.15, ext:0.9,
+    cap:320, weight:3210, grade:25,
+    drive:"Electric 2WD", powerType:"electric",
+    widthStowed:1.17, lengthStowed:2.45,
+    supportsIndoor:true, supportsOutdoor:true, roughTerrain:false,
+    note:"גובה חיצוני מוגבל ל-10 מ׳",
+    url:"https://www.sinoboom.com/content/details_103_52.html",
+    competitors:{
+      "JLG":     {model:"4046ES",        wh:13.9},
+      "Genie":   {model:"GS-4655",       wh:14.07},
+      "Haulotte":{model:"Compact 12",    wh:13.8},
+      "LGMG":    {model:"S1212EII",      wh:13.8},
+      "Skyjack": {model:"SJ4632",        wh:11.6},
+      "Dingli":  {model:"JCPT1212AC",    wh:14.0}
+    }
+  },
+
+  // ── Rough Terrain Scissors ──────────────────
+  {
+    id:"1218RD", name:"1218RD", altName:"4069RD",
+    cat:"scissor_rt", catLabel:"מספריים שטח",
+    catIcon:"bi-truck",
+    wh:14.2, wh_outdoor:14.2, ph:12.2,
+    platL:2.80, platW:1.60, ext:1.5,
+    cap:365, weight:5180, grade:35,
+    drive:"Diesel 4WD×2WS", powerType:"diesel",
+    widthStowed:2.29, lengthStowed:4.56,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:true,
+    note:"עם ספויילרים | מנוע Kubota D1105-E4B",
+    url:"https://www.sinoboom.com/content/details_113_22.html",
+    competitors:{
+      "JLG":     {model:"ERT4069",       wh:13.9},
+      "Genie":   {model:"GS-3246 RT",    wh:11.75},
+      "Haulotte":{model:"Compact 12",    wh:13.8},
+      "LGMG":    {model:"SR1218E",       wh:13.6},
+      "Dingli":  {model:"GTJZ1218D",     wh:14.0}
+    }
+  },
+  {
+    id:"1623RH", name:"1623RH", altName:"5389RH",
+    cat:"scissor_rt", catLabel:"מספריים שטח",
+    catIcon:"bi-truck",
+    wh:18.2, wh_outdoor:18.2, ph:16.2,
+    platL:3.98, platW:1.83, ext:1.5,
+    cap:680, weight:9330, grade:40,
+    drive:"Electric 4WD×2WS", powerType:"electric",
+    widthStowed:2.44, lengthStowed:5.49,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:true,
+    note:"4 עובדים | פלטפורמה גדולה במיוחד",
+    url:"https://www.sinoboom.com/content/details_113_87.html",
+    competitors:{
+      "JLG":     {model:"4394RT",        wh:16.2},
+      "Genie":   {model:"GS-2669 RT",    wh:18.2},
+      "Haulotte":{model:"Compact 12 DX", wh:16.0},
+      "LGMG":    {model:"SR1623D",       wh:16.0},
+      "Dingli":  {model:"GTJZZ15J",      wh:15.0}
+    }
+  },
+
+  // ── Articulating Boom Lifts ─────────────────
+  {
+    id:"AB14EJ", name:"AB14EJ", altName:"AB460EJ",
+    cat:"boom_a", catLabel:"בום מפרקי",
+    catIcon:"bi-diagram-2",
+    wh:16.0, wh_outdoor:16.0, ph:14.0,
+    platL:1.45, platW:0.85, ext:7.6,
+    cap:230, weight:7160, grade:30,
+    drive:"Electric 2WD×2WS", powerType:"electric",
+    widthStowed:1.62, lengthStowed:5.55,
+    turningIn:1.15, turningOut:3.51,
+    supportsIndoor:true, supportsOutdoor:true, roughTerrain:false,
+    note:"חשמלי לחלוטין | סוללה: עופרת-חומצה / ליתיום",
+    url:"https://www.sinoboom.com/content/details_93_9.html",
+    competitors:{
+      "JLG":     {model:"E400AJPN",      wh:14.0},
+      "Genie":   {model:"Z40.23N",       wh:14.2},
+      "Haulotte":{model:"HA12IP",        wh:14.0},
+      "LGMG":    {model:"AR11J",         wh:13.9},
+      "Dingli":  {model:"BA11NE",        wh:11.0}
+    }
+  },
+  {
+    id:"AB15J_Plus", name:"AB15J Plus", altName:"AB480J Plus",
+    cat:"boom_a", catLabel:"בום מפרקי",
+    catIcon:"bi-diagram-2",
+    wh:16.7, wh_outdoor:16.7, ph:14.7,
+    platL:1.83, platW:0.85, ext:8.5,
+    cap:300, weight:7700, grade:40,
+    drive:"Diesel 4WD×2WS", powerType:"diesel",
+    widthStowed:2.29, lengthStowed:6.50,
+    turningIn:1.82, turningOut:4.78,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:false,
+    note:"מנוע Kubota | 40% gradeability | קיבולת גבוהה יותר",
+    url:"https://www.sinoboom.com/content/details_98_106.html",
+    competitors:{
+      "JLG":     {model:"450AJ",         wh:15.72},
+      "Genie":   {model:"Z45.25JRT",     wh:15.72},
+      "Haulotte":{model:"HA16RTJ",       wh:15.8},
+      "LGMG":    {model:"AR16J",         wh:15.5},
+      "Dingli":  {model:"BA18CHRT",      wh:18.0}
+    }
+  },
+  {
+    id:"AB18J", name:"AB18J", altName:"AB600J",
+    cat:"boom_a", catLabel:"בום מפרקי",
+    catIcon:"bi-diagram-2",
+    wh:20.3, wh_outdoor:20.3, ph:18.3,
+    platL:1.83, platW:0.85, ext:12.2,
+    cap:250, weight:10700, grade:40,
+    drive:"Diesel 4WD×2WS", powerType:"diesel",
+    widthStowed:2.49, lengthStowed:8.11,
+    turningIn:3.48, turningOut:6.29,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:false,
+    note:"מנוע Cummins 43kW | 360° סיבוב",
+    url:"https://www.sinoboom.com/content/details_98_15.html",
+    competitors:{
+      "JLG":     {model:"520AJ",         wh:18.8},
+      "Genie":   {model:"Z51-30J",       wh:18.9},
+      "Haulotte":{model:"HA16RTJPRO",    wh:18.0},
+      "LGMG":    {model:"AR20JE",        wh:19.9},
+      "Dingli":  {model:"BA20ERT",       wh:20.0}
+    }
+  },
+  {
+    id:"AB22EJ_Plus", name:"AB22EJ Plus", altName:"AB710EJ Plus",
+    cat:"boom_a", catLabel:"בום מפרקי",
+    catIcon:"bi-diagram-2",
+    wh:23.6, wh_outdoor:23.6, ph:21.6,
+    platL:2.44, platW:0.91, ext:13.4,
+    cap:230, weight:10900, grade:40,
+    drive:"Electric 4WD×2WS", powerType:"electric",
+    widthStowed:2.49, lengthStowed:9.40,
+    turningIn:2.40, turningOut:5.55,
+    supportsIndoor:true, supportsOutdoor:true, roughTerrain:false,
+    note:"חשמלי | קיבולת 454 ק\"ג (מוגבל) | פלטפורמה גדולה",
+    url:"https://www.sinoboom.com/content/details_93_89.html",
+    competitors:{
+      "JLG":     {model:"800AJ",         wh:25.5},
+      "Genie":   {model:"Z80.60",        wh:26.0},
+      "Haulotte":{model:"HA26RTJPRO",    wh:25.6},
+      "LGMG":    {model:"AR24J",         wh:24.0},
+      "Dingli":  {model:"BA28ERT",       wh:28.0}
+    }
+  },
+
+  // ── Telescopic Boom Lifts ───────────────────
+  {
+    id:"TB18J_Plus", name:"TB18J Plus", altName:"TB590J Plus",
+    cat:"boom_t", catLabel:"זרוע טלסקופית",
+    catIcon:"bi-arrows-expand",
+    wh:20.4, wh_outdoor:20.4, ph:18.4,
+    platL:2.44, platW:0.91, ext:13.6,
+    cap:250, weight:8750, grade:45,
+    drive:"Diesel 4WD×2WS", powerType:"diesel",
+    widthStowed:2.47, lengthStowed:9.20,
+    turningIn:2.40, turningOut:4.86,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:false,
+    note:"קיבולת 454 ק\"ג (מוגבל) | Gradeability 45%",
+    url:"https://www.sinoboom.com/content/details_129_93.html",
+    competitors:{
+      "JLG":     {model:"460SJ",         wh:16.0},
+      "Genie":   {model:"S60FE",         wh:20.1},
+      "Haulotte":{model:"HT16RTJPRO",    wh:18.0},
+      "LGMG":    {model:"T24J-H",        wh:19.8},
+      "Dingli":  {model:"BT18CHRT",      wh:18.0}
+    }
+  },
+  {
+    id:"TB22J_Plus", name:"TB22J Plus", altName:"TB740J Plus",
+    cat:"boom_t", catLabel:"זרוע טלסקופית",
+    catIcon:"bi-arrows-expand",
+    wh:24.5, wh_outdoor:24.5, ph:22.5,
+    platL:2.44, platW:0.91, ext:16.7,
+    cap:250, weight:12225, grade:45,
+    drive:"Diesel 4WD×2WS", powerType:"diesel",
+    widthStowed:2.49, lengthStowed:10.45,
+    turningIn:2.40, turningOut:5.55,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:false,
+    note:"קיבולת 454 ק\"ג (מוגבל) | טווח 16.7 מ׳",
+    url:"https://www.sinoboom.com/content/details_129_12.html",
+    competitors:{
+      "JLG":     {model:"660SJ",         wh:23.5},
+      "Genie":   {model:"S65XC",         wh:21.6},
+      "Haulotte":{model:"HT23RTJPRO",    wh:23.0},
+      "LGMG":    {model:"T28J-H",        wh:24.0},
+      "Dingli":  {model:"BT30SHRT",      wh:30.0}
+    }
+  },
+  {
+    id:"TB26J_Plus", name:"TB26J Plus", altName:"TB860J Plus",
+    cat:"boom_t", catLabel:"זרוע טלסקופית",
+    catIcon:"bi-arrows-expand",
+    wh:28.3, wh_outdoor:28.3, ph:26.3,
+    platL:2.44, platW:0.91, ext:21.0,
+    cap:250, weight:14230, grade:45,
+    drive:"Diesel 4WD×2WS", powerType:"diesel",
+    widthStowed:2.49, lengthStowed:12.5,
+    turningIn:2.44, turningOut:5.60,
+    supportsIndoor:false, supportsOutdoor:true, roughTerrain:false,
+    note:"קיבולת 454 ק\"ג (מוגבל) | טווח עד 21 מ׳",
+    url:"https://www.sinoboom.com/content/details_129_82.html",
+    competitors:{
+      "JLG":     {model:"860SJ",         wh:27.7},
+      "Genie":   {model:"S85XC",         wh:27.7},
+      "Haulotte":{model:"HT28RTJPRO",    wh:28.0},
+      "LGMG":    {model:"T34J-H",        wh:28.0},
+      "Dingli":  {model:"BT30ERT",       wh:30.0}
+    }
+  }
+];
+
+// Manufacturer colors / URLs
+const MFR_META = {
+  "JLG":     {color:"#003580", url:"https://www.jlg.com/en/equipment"},
+  "Genie":   {color:"#007dc5", url:"https://www.genielift.com/en/aerial-lifts"},
+  "Haulotte":{color:"#e2001a", url:"https://www.haulotte.com/en_US/equipment"},
+  "LGMG":    {color:"#f4a21e", url:"https://www.lgmgna.com/"},
+  "Skyjack": {color:"#f7941d", url:"https://skyjack.com/equipment/"},
+  "Dingli":  {color:"#1a7a2e", url:"https://en.cndingli.com/products"}
+};
+
+const CAT_COLORS = {
+  scissor_e:"#0055b3", scissor_rt:"#007850",
+  boom_a:   "#8b1a4a", boom_t:    "#5a3890"
+};
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+function getWH(m, env) {
+  if (env === "outdoor") return m.wh_outdoor;
+  if (env === "indoor")  return m.wh;          // indoor WH is typically higher
+  return Math.min(m.wh, m.wh_outdoor);         // "both" = must satisfy both
+}
+
+function powerIcon(pt) {
+  return pt === "electric"
+    ? `<span class="text-success fw-bold"><i class="bi bi-lightning-charge-fill me-1"></i>חשמלי</span>`
+    : `<span class="text-warning fw-bold" style="color:#b06800!important"><i class="bi bi-fuel-pump me-1"></i>דיזל</span>`;
+}
+
+function catBadge(m) {
+  const c = CAT_COLORS[m.cat] || "#555";
+  return `<span class="cat-badge" style="background:${c}20;color:${c};">${m.catLabel}</span>`;
+}
+
+// ══════════════════════════════════════════════
+//  TAB 1 – MODEL SELECTION
+// ══════════════════════════════════════════════
+let currentHeight = 6;
+let currentReach  = 0;
+
+function onHeightChange(v) {
+  currentHeight = parseFloat(v);
+  document.getElementById("heightDisplay").textContent = v + " מ׳";
+  updateResults();
+}
+function onReachChange(v) {
+  currentReach = parseFloat(v);
+  document.getElementById("reachDisplay").textContent = v + " מ׳";
+  updateResults();
+}
+
+function getParams() {
+  return {
+    wh:        currentHeight,
+    env:       document.querySelector('input[name="env"]:checked').value,
+    terrain:   document.querySelector('input[name="terrain"]:checked').value,
+    reach:     currentReach,
+    cap:       parseInt(document.getElementById("workers").value),
+    minWidth:  parseFloat(document.getElementById("minWidth").value),
+    power:     (document.querySelector('input[name="powerPref"]:checked') || {value:"any"}).value
+  };
+}
+
+function updateResults() {
+  const p = getParams();
+  let matches = MODELS.filter(m => {
+    const effectiveWH = getWH(m, p.env);
+    if (effectiveWH < p.wh) return false;
+    if (p.env === "indoor"  && !m.supportsIndoor)  return false;
+    if (p.env === "outdoor" && !m.supportsOutdoor) return false;
+    if (p.terrain === "rough" && !m.roughTerrain)  return false;
+    if (p.terrain === "flat"  && m.roughTerrain && !m.supportsIndoor) return false;
+    if (p.reach > 0 && m.ext < p.reach)            return false;
+    if (m.cap < p.cap)                             return false;
+    if (p.minWidth > 0 && m.platW < p.minWidth)   return false;
+    if (p.power === "electric" && m.powerType !== "electric") return false;
+    if (p.power === "diesel"   && m.powerType !== "diesel")   return false;
+    return true;
+  });
+
+  // Sort: closest WH match first
+  matches.sort((a, b) => getWH(a, p.env) - getWH(b, p.env));
+
+  const el = document.getElementById("resultsContainer");
+  if (!matches.length) {
+    el.innerHTML = `<div class="no-res">
+      <i class="bi bi-exclamation-circle" style="color:var(--sb-orange);"></i>
+      <p>לא נמצאו דגמים עם הפרמטרים שנבחרו.<br><small>נסה להרחיב את הדרישות</small></p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = matches.map((m, i) => buildModelCard(m, p, i === 0)).join("");
+}
+
+function buildModelCard(m, p, isBest) {
+  const effWH = getWH(m, p.env);
+  const compHtml = Object.entries(m.competitors).slice(0,6).map(([mfr, c]) => {
+    const meta = MFR_META[mfr] || {};
+    return `<div class="comp-chip">
+      <div class="comp-mfr" style="color:${meta.color||'#666'};">${mfr}</div>
+      <div class="comp-mdl">${c.model}</div>
+      <div class="comp-wh">WH ≈ ${c.wh} מ׳</div>
+    </div>`;
+  }).join("");
+
+  const extLabel = m.cat.startsWith("boom") ? "טווח אופקי" : "הרחבת סיפון";
+
+  return `
+  <div class="model-card${isBest?" best":""}">
+    <div class="d-flex align-items-start gap-3 flex-wrap">
+      <div class="wh-badge" style="${isBest?"background:var(--sb-orange);":""}">
+        <div class="wh-num">${effWH}</div>
+        <div class="wh-unit">מ׳</div>
+      </div>
+      <div class="flex-grow-1">
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+          <span class="fw-black" style="font-size:1.25rem;color:var(--sb-blue);">${m.name}</span>
+          ${m.altName ? `<span class="text-muted" style="font-size:.85rem;">(${m.altName})</span>` : ""}
+          ${catBadge(m)}
+          ${isBest ? `<span class="best-label">✓ מתאים ביותר</span>` : ""}
+        </div>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.83rem;">
+          ${powerIcon(m.powerType)}
+          ${m.note ? `<span class="text-muted"><i class="bi bi-info-circle me-1"></i>${m.note}</span>` : ""}
+        </div>
+      </div>
+      <a href="${m.url}" target="_blank" class="btn btn-sm" style="background:var(--sb-light);color:var(--sb-blue);border:none;white-space:nowrap;">
+        <i class="bi bi-box-arrow-up-right me-1"></i>sinoboom.com
+      </a>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec-item">
+        <div class="spec-val">${effWH} מ׳</div>
+        <div class="spec-lbl">גובה עבודה</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.ph} מ׳</div>
+        <div class="spec-lbl">גובה פלטפורמה</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.platL}×${m.platW}</div>
+        <div class="spec-lbl">פלטפורמה (מ׳)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.ext} מ׳</div>
+        <div class="spec-lbl">${extLabel}</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.cap} ק"ג</div>
+        <div class="spec-lbl">קיבולת</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.grade}%</div>
+        <div class="spec-lbl">שיפוע מקס׳</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.weight.toLocaleString()}</div>
+        <div class="spec-lbl">משקל (ק"ג)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">${m.widthStowed} מ׳</div>
+        <div class="spec-lbl">רוחב (מקופל)</div>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <div class="xref-section-title">
+        <i class="bi bi-arrow-left-right me-1"></i>דגמים מקבילים (Cross Reference):
+      </div>
+      <div class="comp-grid">${compHtml}</div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  TAB 2 – CROSS REFERENCE
+// ══════════════════════════════════════════════
+
+function buildCompIndex() {
+  COMP_INDEX = {};
+  MODELS.forEach(sbModel => {
+    Object.entries(sbModel.competitors).forEach(([mfr, comp]) => {
+      if (!COMP_INDEX[mfr]) COMP_INDEX[mfr] = [];
+      COMP_INDEX[mfr].push({ model: comp.model, wh: comp.wh, sinoId: sbModel.id });
+    });
+  });
+}
+
+function populateXrefMfrs() {
+  buildCompIndex();
+  const sel = document.getElementById("xrefMfr");
+  Object.keys(COMP_INDEX).sort().forEach(mfr => {
+    const opt = document.createElement("option");
+    opt.value = mfr; opt.textContent = mfr;
+    sel.appendChild(opt);
+  });
+}
+
+function onMfrChange() {
+  const mfr = document.getElementById("xrefMfr").value;
+  const modelSel = document.getElementById("xrefModel");
+  modelSel.innerHTML = "<option value=\"\">— בחר דגם —</option>";
+  document.getElementById("xrefSinoboom").innerHTML =
+    `<div class="no-res"><i class="bi bi-arrow-left-right"></i><p>בחר דגם כדי לראות את ה-SINOBOOM המקביל</p></div>`;
+  document.getElementById("xrefOthers").innerHTML = "";
+
+  if (!mfr) { modelSel.disabled = true; return; }
+
+  const entries = COMP_INDEX[mfr] || [];
+  entries.sort((a,b) => a.wh - b.wh).forEach(e => {
+    const opt = document.createElement("option");
+    opt.value = e.sinoId + "|" + e.model;
+    opt.textContent = e.model + "  (גובה עבודה: " + e.wh + " מ')";
+    modelSel.appendChild(opt);
+  });
+  modelSel.disabled = false;
+}
+
+function showXref() {
+  const mfr   = document.getElementById("xrefMfr").value;
+  const val   = document.getElementById("xrefModel").value;
+  const power = (document.getElementById("xrefPower") || {value:"all"}).value;
+  const sbEl  = document.getElementById("xrefSinoboom");
+  const othEl = document.getElementById("xrefOthers");
+
+  if (!val) {
+    sbEl.innerHTML = `<div class="no-res"><i class="bi bi-arrow-left-right"></i><p>בחר דגם כדי לראות את ה-SINOBOOM המקביל</p></div>`;
+    othEl.innerHTML = "";
+    return;
+  }
+
+  const [sinoId] = val.split("|");
+  const primaryModel = MODELS.find(m => m.id === sinoId);
+  const compData = primaryModel ? primaryModel.competitors[mfr] : null;
+  if (!primaryModel || !compData) { sbEl.innerHTML = ""; othEl.innerHTML = ""; return; }
+
+  const mfrMeta      = MFR_META[mfr] || {};
+  const targetWH     = primaryModel.wh;
+  const catPrefix    = primaryModel.cat.startsWith("boom") ? "boom" : "scissor";
+  const altPowerType = primaryModel.powerType === "electric" ? "diesel" : "electric";
+
+  const altModel = MODELS
+    .filter(m =>
+      m.id !== primaryModel.id &&
+      m.powerType === altPowerType &&
+      m.cat.startsWith(catPrefix) &&
+      Math.abs(m.wh - targetWH) <= 3
+    )
+    .sort((a, b) => Math.abs(a.wh - targetWH) - Math.abs(b.wh - targetWH))[0] || null;
+
+  let showModels = [];
+  if (power === "all") {
+    showModels.push({ model: primaryModel, isAlt: false });
+    if (altModel) showModels.push({ model: altModel, isAlt: true });
+  } else if (power === primaryModel.powerType) {
+    showModels.push({ model: primaryModel, isAlt: false });
+  } else if (altModel && power === altModel.powerType) {
+    showModels.push({ model: altModel, isAlt: true });
+  }
+
+  const banner = `<div class="d-flex align-items-center gap-2 flex-wrap mb-3 p-2 rounded"
+     style="background:${mfrMeta.color||"#555"}14;border-inline-start:4px solid ${mfrMeta.color||"#555"};">
+    <i class="bi bi-tag-fill" style="color:${mfrMeta.color||"#555"};"></i>
+    <span class="fw-semibold text-muted" style="font-size:.82rem;">בחרת:</span>
+    <span class="fw-bold" style="font-size:1rem;color:${mfrMeta.color||"#333"};">
+      ${mfr} ${compData.model}
+    </span>
+    <span class="text-muted" style="font-size:.8rem;">| גובה עבודה: ${compData.wh} מ'</span>
+  </div>`;
+
+  const renderCard = (model, isAlt) => {
+    const extLabel    = model.cat.startsWith("boom") ? "טווח אופקי" : "הרחבת סיפון";
+    const borderColor = isAlt ? "var(--sb-orange)" : "var(--sb-blue)";
+    const headerBg    = isAlt ? "var(--sb-orange)" : "var(--sb-blue)";
+    const powerLabel  = model.powerType === "electric" ? "חשמלי" : "דיזל";
+    const headerText  = isAlt
+      ? `✦ חלופה ${powerLabel} — SINOBOOM`
+      : "✦ הדגם המקביל של SINOBOOM";
+    return `<div class="card-box h-100" style="border:2px solid ${borderColor};border-radius:14px;">
+      <div class="rounded-2 text-white text-center py-1 mb-3 fw-bold"
+           style="background:${headerBg};font-size:.78rem;letter-spacing:.5px;">${headerText}</div>
+      <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+        <div class="wh-badge" style="width:64px;height:64px;background:${borderColor};">
+          <div class="wh-num" style="font-size:1.3rem;">${model.wh}</div>
+          <div class="wh-unit">מ'</div>
+        </div>
+        <div>
+          <div style="font-size:1.4rem;font-weight:900;color:${borderColor};">${model.name}</div>
+          ${model.altName ? `<div style="font-size:.78rem;color:#888;">${model.altName}</div>` : ""}
+          <div class="mt-1 d-flex gap-1 flex-wrap">${catBadge(model)} ${powerIcon(model.powerType)}</div>
+        </div>
+      </div>
+      <div class="spec-grid" style="grid-template-columns:repeat(2,1fr);gap:.45rem;">
+        <div class="spec-item"><div class="spec-val">${model.wh} מ'</div><div class="spec-lbl">גובה עבודה</div></div>
+        <div class="spec-item"><div class="spec-val">${model.ph} מ'</div><div class="spec-lbl">גובה פלטפורמה</div></div>
+        <div class="spec-item"><div class="spec-val">${model.platL}x${model.platW}</div><div class="spec-lbl">פלטפורמה (מ')</div></div>
+        <div class="spec-item"><div class="spec-val">${model.ext} מ'</div><div class="spec-lbl">${extLabel}</div></div>
+        <div class="spec-item"><div class="spec-val">${model.cap} ק"ג</div><div class="spec-lbl">קיבולת</div></div>
+        <div class="spec-item"><div class="spec-val">${model.grade}%</div><div class="spec-lbl">שיפוע מקסימלי</div></div>
+        <div class="spec-item"><div class="spec-val">${model.widthStowed} מ'</div><div class="spec-lbl">רוחב מקופל</div></div>
+        <div class="spec-item"><div class="spec-val">${model.weight.toLocaleString()}</div><div class="spec-lbl">משקל (ק"ג)</div></div>
+      </div>
+      <a href="${model.url}" target="_blank" class="btn btn-sm w-100 mt-3"
+         style="background:var(--sb-light);color:${borderColor};border:none;font-size:.8rem;">
+        <i class="bi bi-box-arrow-up-right me-1"></i>פרטים נוספים באתר sinoboom.com
+      </a>
+    </div>`;
+  };
+
+  if (!showModels.length) {
+    sbEl.innerHTML = banner + `<div class="no-res" style="padding:1.5rem;">
+      <i class="bi bi-x-circle" style="color:var(--sb-orange);"></i>
+      <p>אין דגם סינובום מקביל בסוג כוח זה</p></div>`;
+    othEl.innerHTML = "";
+    return;
+  }
+
+  const colClass = showModels.length > 1 ? "col-md-6" : "col-12";
+  const cards = showModels.map(({model, isAlt}) =>
+    `<div class="${colClass}">${renderCard(model, isAlt)}</div>`
+  ).join("");
+
+  sbEl.innerHTML = banner + `<div class="row g-3">${cards}</div>`;
+
+  const otherRows = Object.entries(primaryModel.competitors)
+    .filter(([m]) => m !== mfr)
+    .map(([m, c]) => {
+      const meta = MFR_META[m] || {};
+      return `<tr>
+        <td><span class="fw-bold" style="color:${meta.color||"#333"};">${m}</span></td>
+        <td class="fw-bold">${c.model}</td>
+        <td>${c.wh} מ'</td>
+        <td><a href="${meta.url||"#"}" target="_blank"
+             class="btn btn-sm btn-outline-secondary py-0 px-2"
+             style="font-size:.7rem;">אתר יצרן</a></td>
+      </tr>`;
+    }).join("");
+
+  othEl.innerHTML = `
+  <div class="card-box">
+    <div class="rounded-2 text-center py-1 mb-3 fw-bold"
+         style="background:#e8edf5;color:#555;font-size:.78rem;letter-spacing:.4px;">
+      ↔ דגמים מקבילים של יצרנים אחרים
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0" style="font-size:.85rem;">
+        <thead style="background:var(--sb-light);">
+          <tr><th>יצרן</th><th>דגם מקביל</th><th>גובה עבודה</th><th></th></tr>
+        </thead>
+        <tbody>${otherRows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+
+// ══════════════════════════════════════════════
+//  TAB 3 – CATALOG
+// ══════════════════════════════════════════════
+function renderCatalog() {
+  const filter = document.getElementById("catFilter").value;
+  const sortBy = document.getElementById("catSort").value;
+
+  let rows = MODELS.filter(m => filter === "all" || m.cat === filter);
+
+  if (sortBy === "wh")    rows.sort((a,b) => a.wh - b.wh);
+  if (sortBy === "cap")   rows.sort((a,b) => b.cap - a.cap);
+  if (sortBy === "reach") rows.sort((a,b) => b.ext - a.ext);
+
+  const extLabel = (m) => m.cat.startsWith("boom") ? "טווח אופקי" : "הרחבה";
+
+  document.getElementById("catalogBody").innerHTML = rows.map(m => {
+    const c = CAT_COLORS[m.cat] || "#555";
+    return `<tr>
+      <td>
+        <div class="tbl-model">${m.name}</div>
+        <div style="font-size:.72rem;color:#888;">${m.altName||""}</div>
+      </td>
+      <td><span class="cat-badge" style="background:${c}20;color:${c};">${m.catLabel}</span></td>
+      <td class="fw-bold">${m.wh} מ׳${m.wh !== m.wh_outdoor ? `<br><small class="text-muted">${m.wh_outdoor} (חוץ)</small>`:""}
+      </td>
+      <td>${m.ph} מ׳</td>
+      <td>${m.platL} × ${m.platW}</td>
+      <td>${m.ext} מ׳<br><small class="text-muted">${extLabel(m)}</small></td>
+      <td>${m.cap} ק"ג</td>
+      <td>${powerIcon(m.powerType)}</td>
+      <td>${m.grade}%</td>
+      <td>${m.weight.toLocaleString()}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+  populateXrefMfrs();
+  renderCatalog();
+  onHeightChange(6);
+});
+
+// ══════════════════════════════════════════════
+//  TAB 4 – MARKET ANALYSIS
+//  מקור נתונים: רשם החברות ישראל | קוד 539
+// ══════════════════════════════════════════════
+
+const MARKET_DATA = {
+  total: 4207,
+  byManufacturer: [
+    { name: "JLG",       units: 1823, pct: 43.3 },
+    { name: "GENIE",     units: 1137, pct: 27.0 },
+    { name: "LGMG",      units:  317, pct:  7.5 },
+    { name: "NIFTYLIFT", units:  203, pct:  4.8 },
+    { name: "HAULOTTE",  units:  126, pct:  3.0 },
+    { name: "DINGLI",    units:  114, pct:  2.7 },
+    { name: "MAGNI",     units:   94, pct:  2.2 },
+    { name: "SNORKEL",   units:   79, pct:  1.9 },
+    { name: "ZOOM LION", units:   61, pct:  1.4 },
+    { name: "SINOBOOM",  units:   53, pct:  1.3 },
+    { name: "SKYJACK",   units:   39, pct:  0.9 },
+    { name: "TEREX",     units:   34, pct:  0.8 },
+    { name: "LIUGONG",   units:   29, pct:  0.7 },
+    { name: "AIRO",      units:   23, pct:  0.5 },
+    { name: "XCMG",      units:   15, pct:  0.4 },
+    { name: "אחרים",     units:   57, pct:  1.4 }
+  ],
+  byYear: [
+    { year: "2022", units: 603 },
+    { year: "2023", units: 547 },
+    { year: "2024", units: 502 },
+    { year: "2025", units: 763 },
+    { year: "2026*", units: 271 }
+  ],
+  byType: [
+    { label: "מספריים חשמלי",           units: 1784, pct: 42.4 },
+    { label: "בום מפרקי (ארטיקולטור)",   units: 1639, pct: 39.0 },
+    { label: "בום ישר (טלסקופי)",        units:  458, pct: 10.9 },
+    { label: "מספריים שטח",              units:  326, pct:  7.7 }
+  ],
+  topModels: [
+    { mfr: "JLG",      model: "ES1932",      type: "מספריים חשמלי",  units: 373, sinoId: "0608SE"     },
+    { mfr: "GENIE",    model: "Z45.25J",     type: "בום מפרקי",      units: 275, sinoId: "AB15J_Plus" },
+    { mfr: "JLG",      model: "ES1530L",     type: "מספריים חשמלי",  units: 269, sinoId: null         },
+    { mfr: "GENIE",    model: "Z51-30J",     type: "בום מפרקי",      units: 262, sinoId: "AB18J"      },
+    { mfr: "JLG",      model: "520AJ",       type: "בום מפרקי",      units: 148, sinoId: "AB18J"      },
+    { mfr: "JLG",      model: "ES2646",      type: "מספריים חשמלי",  units: 100, sinoId: "1012E"      },
+    { mfr: "GENIE",    model: "Z34.22",      type: "בום מפרקי",      units:  79, sinoId: null         },
+    { mfr: "JLG",      model: "R4045",       type: "מספריים שטח",    units:  78, sinoId: null         },
+    { mfr: "JLG",      model: "ES2632",      type: "מספריים חשמלי",  units:  77, sinoId: null         },
+    { mfr: "JLG",      model: "450AJ",       type: "בום מפרקי",      units:  73, sinoId: "AB15J_Plus" },
+    { mfr: "GENIE",    model: "Z45.25JRT",   type: "בום מפרקי",      units:  68, sinoId: "AB15J_Plus" },
+    { mfr: "JLG",      model: "660SJ",       type: "טלסקופי",        units:  66, sinoId: "TB22J_Plus"  },
+    { mfr: "LGMG",     model: "S0607EII",    type: "מספריים חשמלי",  units:  63, sinoId: "0608SE"     },
+    { mfr: "SNORKEL",  model: "A38E",        type: "בום מפרקי",      units:  63, sinoId: null         },
+    { mfr: "JLG",      model: "1200SJP",     type: "טלסקופי",        units:  62, sinoId: null         }
+  ],
+  sinoboomInIsrael: [
+    { model: "GTZZ15J",    type: "בום מפרקי",         units: 27, sinoId: null          },
+    { model: "GTJZ1218D",  type: "מספריים שטח דיזל",  units:  8, sinoId: "1218RD"      },
+    { model: "TB22J PLUS", type: "בום ישר טלסקופי",   units:  5, sinoId: "TB22J_Plus"  },
+    { model: "GTZZ15J-3",  type: "בום מפרקי",         units:  4, sinoId: null          },
+    { model: "GTZZ25J",    type: "בום מפרקי",         units:  3, sinoId: null          },
+    { model: "AB14EJ",     type: "בום מפרקי חשמלי",   units:  2, sinoId: "AB14EJ"      },
+    { model: "GTZZ14EJ",   type: "בום מפרקי",         units:  1, sinoId: null          },
+    { model: "GTZZ18J",    type: "בום מפרקי",         units:  1, sinoId: null          },
+    { model: "GTZZ16EJ",   type: "בום מפרקי חשמלי",   units:  1, sinoId: null          },
+    { model: "GTJZZ15J",   type: "מספריים שטח",       units:  1, sinoId: null          }
+  ]
+};
+
+const CHART_PALETTE = [
+  '#29ABE2','#F47920','#2ECC71','#9B59B6',
+  '#E74C3C','#F39C12','#1ABC9C','#3498DB',
+  '#E67E22','#95A5A6'
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+  // ── Manufacturer bar chart ──────────────────
+  const mfrTop10 = MARKET_DATA.byManufacturer.slice(0, 10);
+  new Chart(document.getElementById("chartMfr"), {
+    type: "bar",
+    data: {
+      labels: mfrTop10.map(d => d.name),
+      datasets: [{
+        label: "יחידות",
+        data:  mfrTop10.map(d => d.units),
+        backgroundColor: mfrTop10.map((d, i) =>
+          d.name === "SINOBOOM" ? "#F47920" : CHART_PALETTE[i % CHART_PALETTE.length]
+        ),
+        borderRadius: 5,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.x.toLocaleString()} יח׳  (${mfrTop10[ctx.dataIndex].pct}%)`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: "#f0f0f0" }, ticks: { font: { size: 11 } } },
+        y: { ticks: { font: { size: 12, weight: "bold" } } }
+      }
+    }
+  });
+
+  // ── Platform type doughnut ──────────────────
+  new Chart(document.getElementById("chartType"), {
+    type: "doughnut",
+    data: {
+      labels: MARKET_DATA.byType.map(d => d.label),
+      datasets: [{
+        data: MARKET_DATA.byType.map(d => d.units),
+        backgroundColor: ["#29ABE2","#F47920","#2ECC71","#9B59B6"],
+        borderWidth: 2,
+        borderColor: "#fff"
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: { font: { size: 11 }, padding: 12 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.parsed.toLocaleString()} יח׳ (${MARKET_DATA.byType[ctx.dataIndex].pct}%)`
+          }
+        }
+      },
+      cutout: "58%"
+    }
+  });
+
+  // ── Yearly registrations line chart ─────────
+  new Chart(document.getElementById("chartYear"), {
+    type: "line",
+    data: {
+      labels: MARKET_DATA.byYear.map(d => d.year),
+      datasets: [{
+        label: "רישומים חדשים",
+        data:  MARKET_DATA.byYear.map(d => d.units),
+        borderColor: "#29ABE2",
+        backgroundColor: "rgba(41,171,226,0.12)",
+        borderWidth: 3,
+        pointBackgroundColor: MARKET_DATA.byYear.map((d, i) =>
+          i === MARKET_DATA.byYear.length - 1 ? "#F47920" : "#29ABE2"
+        ),
+        pointRadius: 6,
+        tension: 0.35,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.y.toLocaleString()} יח׳`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: "#f0f0f0" },
+          ticks: { font: { size: 11 } }
+        },
+        x: { ticks: { font: { size: 12, weight: "bold" } } }
+      }
+    }
+  });
+
+  // ── Top 15 models table ──────────────────────
+  const topBody = document.getElementById("marketTopBody");
+  topBody.innerHTML = MARKET_DATA.topModels.map((row, i) => {
+    const sinoModel = row.sinoId ? MODELS.find(m => m.id === row.sinoId) : null;
+    const sinoCell  = sinoModel
+      ? `<a href="#" onclick="activateModelTab('${sinoModel.id}'); return false;"
+            style="color:var(--sb-blue);font-weight:700;">${sinoModel.name}</a>`
+      : `<span style="color:#aaa;font-size:.78rem;">אין התאמה ישירה</span>`;
+    return `<tr>
+      <td style="font-size:.82rem;color:#888;">${i + 1}</td>
+      <td style="font-size:.82rem;font-weight:700;">${row.mfr}</td>
+      <td style="font-size:.82rem;font-weight:800;color:#1a1a2e;">${row.model}</td>
+      <td style="font-size:.78rem;">${row.type}</td>
+      <td style="font-size:.82rem;font-weight:700;">${row.units.toLocaleString()}</td>
+      <td style="font-size:.82rem;">${((row.units / MARKET_DATA.total) * 100).toFixed(1)}%</td>
+      <td style="font-size:.82rem;">${sinoCell}</td>
+    </tr>`;
+  }).join("");
+
+  // ── Sinoboom models in Israel table ─────────
+  const sinoBody = document.getElementById("marketSinoBody");
+  sinoBody.innerHTML = MARKET_DATA.sinoboomInIsrael.map(row => {
+    const sinoModel = row.sinoId ? MODELS.find(m => m.id === row.sinoId) : null;
+    const linkCell  = sinoModel
+      ? `<a href="#" onclick="activateModelTab('${sinoModel.id}'); return false;"
+            style="color:var(--sb-blue);font-weight:700;">
+            <i class="bi bi-search me-1"></i>הצג ב-Tab 1</a>`
+      : `<span style="color:#aaa;font-size:.78rem;">דגם ישן / לא בקטלוג</span>`;
+    return `<tr style="background:var(--sb-light);">
+      <td style="font-weight:800;color:var(--sb-blue);font-size:.85rem;">${row.model}</td>
+      <td style="font-size:.82rem;">${row.type}</td>
+      <td style="font-weight:700;font-size:.85rem;">${row.units}</td>
+      <td style="font-size:.82rem;">${linkCell}</td>
+    </tr>`;
+  }).join("");
+});
+
+// Navigate to Tab 1 and highlight a model
+function activateModelTab(modelId) {
+  const tabEl = document.querySelector('a[href="#tabSelect"]');
+  if (tabEl) {
+    const tab = new bootstrap.Tab(tabEl);
+    tab.show();
+  }
+  // Pre-select parameters that surface the model
+  const m = MODELS.find(x => x.id === modelId);
+  if (!m) return;
+  document.getElementById("heightSlider").value = m.wh;
+  onHeightChange(m.wh);
+}
+
+// ══════════ MARKET SIMULATOR DATA ══════════
+const GARY = {
+  types: [
+    { key: 'art',    heb: 'בום מפרקי',           avg: 65000, y24: 178, y25: 216, y26p: 32,
+      sino: ['AB14EJ', 'AB15J Plus', 'AB18J', 'AB22EJ Plus'],
+      color: '#29ABE2' },
+    { key: 'escSmall',heb: 'מספריים חשמלית קטנה', avg: 10000, y24: 546, y25: 907, y26p: 50,
+      sino: ['0608SE', '0808E', '1012E'],
+      color: '#F47920' },
+    { key: 'escMid',  heb: 'מספריים חשמלית גדולה',avg: 31000, y24: 16,  y25: 51,  y26p: 2,
+      sino: ['1012E', '1212E'],
+      color: '#2ecc71' },
+    { key: 'selfProp',heb: 'מנוף עצמאי VL/ML',    avg: 7500,  y24: 63,  y25: 29,  y26p: 1,
+      sino: [],
+      color: '#9b59b6' },
+    { key: 'tele',   heb: 'בום ישר (טלסקופי)',    avg: 75000, y24: 53,  y25: 67,  y26p: 12,
+      sino: ['TB18J Plus', 'TB22J Plus', 'TB26J Plus'],
+      color: '#1090C4' },
+  ],
+  official: { y22: 603, y23: 547, y24: 502, y25: 763, y26p: 63 },
+  gary:     { y22: null, y23: null, y24: 856, y25: 1270, y26p: 97 },
+  sinoUnits: 53,
+  sinoShare: 1.3,
+  mfrRanks: [
+    {mfr:'JLG', units: 1823}, {mfr:'GENIE', units: 1137}, {mfr:'LGMG', units: 317},
+    {mfr:'NIFTYLIFT', units: 203}, {mfr:'HAULOTTE', units: 126}, {mfr:'DINGLI', units: 114},
+    {mfr:'MAGNI', units: 94}, {mfr:'SNORKEL', units: 79}, {mfr:'SINOBOOM', units: 53},
+    {mfr:'SKYJACK', units: 39},
+  ]
+};
+
+function fmtUSD(n) {
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n/1000) + 'K';
+  return '$' + n;
+}
+
+function updateSimulator(pct) {
+  pct = parseFloat(pct);
+  document.getElementById('simoLabel').textContent = pct.toFixed(1) + '%';
+  const total2025 = GARY.gary.y25;
+  const units = Math.round(total2025 * pct / 100);
+  const revenue = GARY.types.reduce((sum, t) => {
+    const typeUnits = Math.round(t.y25 * pct / 100);
+    return sum + typeUnits * t.avg;
+  }, 0);
+  const growth = units > 0 ? ((units - GARY.sinoUnits) / GARY.sinoUnits * 100).toFixed(0) : 0;
+  document.getElementById('simoUnits').textContent = units.toLocaleString();
+  document.getElementById('simoRevenue').textContent = fmtUSD(revenue);
+  document.getElementById('simoGrowth').textContent = (growth > 0 ? '+' : '') + growth + '%';
+
+  // Rank
+  const allWithSino = GARY.mfrRanks.map(r => ({...r}));
+  const sinoIdx = allWithSino.findIndex(r => r.mfr === 'SINOBOOM');
+  allWithSino[sinoIdx].units = units;
+  allWithSino.sort((a,b) => b.units - a.units);
+  const rank = allWithSino.findIndex(r => r.mfr === 'SINOBOOM') + 1;
+  const rankEl = document.getElementById('simoRank');
+  rankEl.textContent = rank + (rank===1?'st':rank===2?'nd':rank===3?'rd':'th');
+
+  // Type breakdown
+  const breakdownEl = document.getElementById('simoTypeBreakdown');
+  breakdownEl.innerHTML = GARY.types.map(t => {
+    const tu = Math.round(t.y25 * pct / 100);
+    return `<div class="col-6 col-md">
+      <div class="text-center p-2 rounded" style="background:${t.color}18;border:1px solid ${t.color}40;">
+        <div style="font-size:1.2rem;font-weight:800;color:${t.color};">${tu}</div>
+        <div style="font-size:.68rem;color:#555;">${t.heb}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Update simulator chart
+  if (window._simoChart) {
+    window._simoChart.data.datasets[1].data = GARY.types.map(t => Math.round(t.y25 * pct / 100));
+    window._simoChart.update();
+  }
+}
+
+function switchToTab1(modelId) {
+  const tab1 = document.querySelector('a[href="#tabSelect"]');
+  if (tab1) tab1.click();
+}
+
+function initMarketCharts() {
+  const palette = ['#29ABE2','#F47920','#2ecc71','#9b59b6','#1090C4'];
+
+  // ── 1. Grouped bar: types × years ──
+  const ctx1 = document.getElementById('chartGaryTypes');
+  if (ctx1) {
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: GARY.types.map(t => t.heb),
+        datasets: [
+          { label: '2024', data: GARY.types.map(t => t.y24), backgroundColor: palette.map(c => c + 'aa') },
+          { label: '2025', data: GARY.types.map(t => t.y25), backgroundColor: palette }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: { x: { ticks: { font: { size: 11 } } }, y: { beginAtZero: true } }
+      }
+    });
+  }
+
+  // ── 2. Doughnut: type share 2025 ──
+  const ctx2 = document.getElementById('chartGaryDoughnut');
+  if (ctx2) {
+    new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: GARY.types.map(t => t.heb),
+        datasets: [{ data: GARY.types.map(t => t.y25), backgroundColor: palette, borderWidth: 2 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} יח׳ (${(ctx.raw/GARY.gary.y25*100).toFixed(1)}%)` } }
+        },
+        cutout: '60%'
+      }
+    });
+    // Manual legend
+    const leg = document.getElementById('doughnutLegend');
+    if (leg) {
+      leg.innerHTML = GARY.types.map((t,i) =>
+        `<span style="display:inline-flex;align-items:center;gap:4px;margin-left:10px;margin-bottom:4px;">
+          <span style="width:10px;height:10px;border-radius:50%;background:${palette[i]};display:inline-block;"></span>
+          ${t.heb} (${(t.y25/GARY.gary.y25*100).toFixed(0)}%)
+        </span>`
+      ).join('');
+    }
+  }
+
+  // ── 3. Line: Gary vs official ──
+  const ctx3 = document.getElementById('chartGaryVsOfficial');
+  if (ctx3) {
+    new Chart(ctx3, {
+      type: 'line',
+      data: {
+        labels: ['2022','2023','2024','2025','2026 (חלקי)'],
+        datasets: [
+          {
+            label: 'נתוני גארי (שוק אמיתי)',
+            data: [null, null, GARY.gary.y24, GARY.gary.y25, GARY.gary.y26p],
+            borderColor: '#F47920', backgroundColor: '#F4792022',
+            borderWidth: 3, pointRadius: 5, tension: 0.3, fill: true
+          },
+          {
+            label: 'נתוני משה"ת (רשמי)',
+            data: [GARY.official.y22, GARY.official.y23, GARY.official.y24, GARY.official.y25, GARY.official.y26p],
+            borderColor: '#29ABE2', backgroundColor: '#29ABE222',
+            borderWidth: 3, pointRadius: 5, tension: 0.3, fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: { y: { beginAtZero: true, title: { display: true, text: 'יחידות' } } }
+      }
+    });
+  }
+
+  // ── 4. Simulator bar chart ──
+  const ctx4 = document.getElementById('chartSimulator');
+  if (ctx4) {
+    window._simoChart = new Chart(ctx4, {
+      type: 'bar',
+      data: {
+        labels: GARY.types.map(t => t.heb),
+        datasets: [
+          { label: 'שוק 2025', data: GARY.types.map(t => t.y25), backgroundColor: palette.map(c => c + '55') },
+          { label: 'יעד סינובום', data: GARY.types.map(t => Math.round(t.y25 * 0.05)),
+            backgroundColor: '#F47920', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' }, title: { display: true, text: 'יחידות: שוק מלא vs. יעד סינובום' } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  }
+
+  // ── Populate type table ──
+  const tbody = document.getElementById('marketTypeTable');
+  if (tbody) {
+    const total25 = GARY.gary.y25;
+    tbody.innerHTML = GARY.types.map((t, i) => {
+      const growth = ((t.y25 - t.y24) / t.y24 * 100).toFixed(0);
+      const pct25  = (t.y25 / total25 * 100).toFixed(1);
+      const value25 = (t.y25 * t.avg).toLocaleString('en-US', {style:'currency',currency:'USD',maximumFractionDigits:0});
+      const sinoStr = t.sino.length
+        ? `<span style="color:var(--sb-blue);font-size:.77rem;">${t.sino.join(' · ')}</span>`
+        : '<span class="text-muted" style="font-size:.77rem;">אין דגם נוכחי — הזדמנות!</span>';
+      const growthColor = growth > 0 ? '#2ecc71' : '#e74c3c';
+      return `<tr>
+        <td><span class="fw-bold" style="color:${palette[i]};">● </span>${t.heb}</td>
+        <td class="text-center">${t.y24}</td>
+        <td class="text-center fw-bold">${t.y25}</td>
+        <td class="text-center fw-bold" style="color:${growthColor};">${growth>0?'+':''}${growth}%</td>
+        <td class="text-center">${pct25}%</td>
+        <td class="text-center">${fmtUSD(t.avg)}</td>
+        <td class="text-center">${value25}</td>
+        <td>${sinoStr}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Init simulator display
+  updateSimulator(5);
+}
+
+document.addEventListener("DOMContentLoaded", initMarketCharts);
+</script>
+</body>
+</html>
